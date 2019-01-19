@@ -1,21 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "InputBuffer.h"
+#include "Util.h"
 
 
 int main() {
-    char *input=NULL;
-    size_t len=0;
-    printf("db > ");
-    while (getline(&input, &len, stdin) != -1) {
-        if (!strncmp(input, ".exit", 4)) {
+    InputBuffer_t *input_buffer = new_InputBuffer();
+    for (;;) {
+        print_prompt();
+        read_input(input_buffer);
+        if (!strncmp(input_buffer->buffer, ".exit", 4)) {
             break;
         }
-
-        free(input);
-        input = NULL;
-        len = 0;
-        printf("db > ");
+        clean_InputBuffer(input_buffer);
     }
     return 0;
 }
