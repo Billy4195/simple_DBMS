@@ -12,6 +12,8 @@ int main() {
         read_input(input_buffer);
         if (!strncmp(input_buffer->buffer, ".exit", 4)) {
             break;
+        } else {
+            printf("Unrecognized command '%s'.\n", input_buffer->buffer);
         }
         clean_InputBuffer(input_buffer);
     }
