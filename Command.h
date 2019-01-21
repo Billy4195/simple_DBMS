@@ -13,5 +13,6 @@ typedef struct Command {
 } Command_t;
 
 Command_t* new_Command();
+void free_Command(Command_t *cmd);
 
 #endif

@@ -7,3 +7,10 @@ Command_t* new_Command() {
     cmd->args = NULL;
     return cmd;
 }
+
+/*
+ * TODO: This func should free the allocated memory
+ */
+void free_Command(Command_t *cmd) {
+
+}
