@@ -1,8 +1,8 @@
 CC=gcc
 CFLAGS=-I. -Wall
 TARGET=shell
-DEPS=InputBuffer.h Util.h
-OBJ=InputBuffer.o shell.o Util.o
+DEPS=InputBuffer.h Util.h Command.h
+OBJ=InputBuffer.o shell.o Util.o Command.o
 
 all: $(TARGET)
 
