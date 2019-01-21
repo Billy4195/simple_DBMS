@@ -16,6 +16,6 @@ typedef struct Command {
 
 Command_t* new_Command();
 int add_Arg(Command_t *cmd, char *arg);
-void free_Command(Command_t *cmd);
+void cleanup_Command(Command_t *cmd);
 
 #endif

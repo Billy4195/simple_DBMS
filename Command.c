@@ -44,8 +44,14 @@ error:
 }
 
 /*
- * TODO: This func should free the allocated memory
+ * TODO: This func will release the allocated args memories
  */
-void free_Command(Command_t *cmd) {
-
+void cleanup_Command(Command_t *cmd) {
+    int idx;
+    for (idx = 0; idx < cmd->args_cap; idx++) {
+        free(cmd->args[idx]);
+        cmd->args[idx] = NULL;
+    }
+    cmd->type = UNRECOG_CMD;
+    cmd->args_len = 0;
 }
