@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include "Util.h"
 #include "Command.h"
@@ -20,5 +21,13 @@ int parse_input(char *input, Command_t *cmd) {
         token = strtok(NULL, " ");
     }
     return cmd->type;
+}
+
+void handle_builtin_cmd(Command_t *cmd) {
+    if (!strncmp(cmd->args[0], ".exit", 5)) {
+        exit(0);
+    } else {
+
+    }
 }
 
