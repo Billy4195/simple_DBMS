@@ -16,6 +16,8 @@ int parse_input(char *input, Command_t *cmd) {
     while (token != NULL) {
         if (!strncmp(token, ".exit", 5)) {
             cmd->type = BUILT_IN_CMD;
+        } else if (!strncmp(token, "insert", 6)) {
+            cmd->type = QUERY_CMD;
         }
         add_Arg(cmd, token);
         token = strtok(NULL, " ");
@@ -28,6 +30,12 @@ void handle_builtin_cmd(Command_t *cmd) {
         exit(0);
     } else {
 
+    }
+}
+
+void handle_query_cmd(Command_t *cmd) {
+    if (!strncmp(cmd->args[0], "insert", 6)) {
+        printf("The insert query should be implemented in here\n");
     }
 }
 

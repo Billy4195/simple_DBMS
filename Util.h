@@ -5,5 +5,6 @@
 void print_prompt();
 int parse_input(char *input, Command_t *cmd);
 void handle_builtin_cmd(Command_t *cmd);
+void handle_query_cmd(Command_t *cmd);
 
 #endif
