@@ -13,12 +13,12 @@ void print_prompt() { printf("db > "); }
 int parse_input(char *input, Command_t *cmd) {
     char *token;
     token = strtok(input, " \n");
+    if (!strncmp(token, ".exit", 5)) {
+        cmd->type = BUILT_IN_CMD;
+    } else if (!strncmp(token, "insert", 6)) {
+        cmd->type = QUERY_CMD;
+    }
     while (token != NULL) {
-        if (!strncmp(token, ".exit", 5)) {
-            cmd->type = BUILT_IN_CMD;
-        } else if (!strncmp(token, "insert", 6)) {
-            cmd->type = QUERY_CMD;
-        }
         add_Arg(cmd, token);
         token = strtok(NULL, " ");
     }
