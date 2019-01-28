@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I. -Wall
+CFLAGS=-Iinclude -Wall
 TARGET=shell
 DEPS=$(wildcard *.h)
 SRC=$(wildcard *.c)
