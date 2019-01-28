@@ -16,7 +16,7 @@ all: $(TARGET) $(TESTS)
 shell: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-$(TESTS): $(TEST_SRC) Command.c Command.h
+$(TESTS): $(TEST_SRC) Command.c $(DEPS)
 	$(CC) -o $@ $(TEST_SRC) Command.c $(CFLAGS)
 
 .PHONY: clean
