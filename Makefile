@@ -1,10 +1,13 @@
 CC=gcc
 CFLAGS=-I. -Wall
-TARGET=shell test_Command
+TARGET=shell
 DEPS=InputBuffer.h Util.h Command.h
 OBJ=InputBuffer.o shell.o Util.o Command.o
+TEST_SRC_DIR=test
+TEST_SRC=$(wildcard $(TEST_SRC_DIR)/*.c)
+TESTS=$(patsubst $(TEST_SRC_DIR)/%.c, $(TEST_SRC_DIR)/%,$(TEST_SRC))
 
-all: $(TARGET)
+all: $(TARGET) $(TESTS)
 
 %.o: %.c $(DEPS)
 	$(CC) -o $@ $< -c $(CFLAGS)
@@ -12,10 +15,10 @@ all: $(TARGET)
 shell: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-test_Command: test_Command.c Command.c Command.h
-	$(CC) -o $@ test_Command.c Command.c $(CFLAGS)
+$(TESTS): $(TEST_SRC) Command.c Command.h
+	$(CC) -o $@ $(TEST_SRC) Command.c $(CFLAGS)
 
 .PHONY: clean
 
 clean:
-	rm $(TARGET) $(OBJ)
+	rm $(TARGET) $(OBJ) $(TESTS)
