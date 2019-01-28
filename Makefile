@@ -4,8 +4,8 @@ TARGET=shell
 DEPS=InputBuffer.h Util.h Command.h
 OBJ=InputBuffer.o shell.o Util.o Command.o
 TEST_SRC_DIR=test
-TEST_SRC=$(wildcard $(TEST_SRC_DIR)/*.c)
-TESTS=$(patsubst $(TEST_SRC_DIR)/%.c, $(TEST_SRC_DIR)/%,$(TEST_SRC))
+TEST_SRC=$(wildcard $(TEST_SRC_DIR)/*_test.c)
+TESTS=$(patsubst $(TEST_SRC_DIR)/%_test.c, $(TEST_SRC_DIR)/%_test,$(TEST_SRC))
 
 all: $(TARGET) $(TESTS)
 
