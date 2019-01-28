@@ -2,8 +2,9 @@ CC=gcc
 CFLAGS=-Iinclude -Wall
 TARGET=shell
 DEPS=$(wildcard *.h)
-SRC=$(wildcard *.c)
-OBJ=$(patsubst %.c, %.o, $(SRC))
+SRC_DIR=src
+SRC=$(wildcard $(SRC_DIR)/*.c)
+OBJ=$(patsubst $(SRC_DIR)/%.c, $(SRC_DIR)/%.o, $(SRC))
 TEST_SRC_DIR=test
 TEST_SRC=$(wildcard $(TEST_SRC_DIR)/*_test.c)
 TESTS=$(patsubst $(TEST_SRC_DIR)/%_test.c, $(TEST_SRC_DIR)/%_test,$(TEST_SRC))
@@ -16,8 +17,8 @@ all: $(TARGET) $(TESTS)
 shell: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-$(TESTS): $(TEST_SRC) Command.c $(DEPS)
-	$(CC) -o $@ $(TEST_SRC) Command.c $(CFLAGS)
+$(TESTS): $(TEST_SRC) $(SRC_DIR)/Command.c $(DEPS)
+	$(CC) -o $@ $(TEST_SRC) $(SRC_DIR)/Command.c $(CFLAGS)
 
 .PHONY: clean
 
