@@ -1,6 +1,12 @@
+#include <stdlib.h>
 #include "Table.h"
 
 Table_t *new_Table() {
-    return NULL;
+    Table_t *table = (Table_t*)malloc(sizeof(Table_t));
+    table->capacity = MAX_TABLE_SIZE;
+    table->len = 0;
+    table->users = (User_t*)malloc(
+                            sizeof(User_t) * MAX_TABLE_SIZE);
+    return table;
 }
 
