@@ -23,10 +23,13 @@ all: $(TARGET) $(TESTS)
 shell: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
+check: $(TESTS)
+	./test/all_test
+
 $(TESTS): $(TEST_SRC) $(DEP_SRC) $(DEPS)
 	$(CXX) -o $@ $(TEST_SRC) $(DEP_SRC) $(CFLAGS) $(TEST_FLAGS)
 
-.PHONY: clean
+.PHONY: clean check
 
 clean:
 	rm $(TARGET) $(OBJ) $(TESTS)
