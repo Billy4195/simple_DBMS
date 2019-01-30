@@ -15,18 +15,19 @@ TEST(testCommand, testNewCommand) {
 
 TEST(testCommand, testAddArg) {
     Command_t *cmd = new_Command();
-    int ret = add_Arg(cmd, "test1");
+    char const *args[] = { "test1", "test2", "test3", \
+                            "test4", "test5", "test6" };
+    size_t idx;
+    int ret = add_Arg(cmd, args[0]);
     if (ret == 0) {
         ASSERT_NE(cmd->args, nullptr);
         ASSERT_TRUE(!strncmp(cmd->args[0], "test1", 5));
         ASSERT_TRUE(cmd->args_len == 1);
         ASSERT_TRUE(cmd->args_cap == 5);
 
-        add_Arg(cmd, "test2");
-        add_Arg(cmd, "test3");
-        add_Arg(cmd, "test4");
-        add_Arg(cmd, "test5");
-        add_Arg(cmd, "test6");
+        for (idx = 1; idx < 6; idx++) {
+            add_Arg(cmd, args[idx]);
+        }
 
         ASSERT_NE(cmd->args, nullptr);
         ASSERT_EQ(strncmp(cmd->args[5], "test6", 5), 0);

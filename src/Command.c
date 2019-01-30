@@ -11,7 +11,7 @@ Command_t* new_Command() {
     return cmd;
 }
 
-int add_Arg(Command_t *cmd, char *arg) {
+int add_Arg(Command_t *cmd, const char *arg) {
     char **new_buf;
     if (cmd->args == NULL) {
         new_buf = (char **) malloc(sizeof(char*) * 5);
