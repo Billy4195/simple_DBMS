@@ -32,3 +32,30 @@ TEST(testUtil, testHandleInsertCmd) {
     ASSERT_EQ(table->len, 1);
 }
 
+TEST(testUtil, testHandleSelectCmdEmpty) {
+    Table_t *table = new_Table();
+    char const *args[] = { "select" };
+    Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
+    int ret;
+
+    ret = handle_select_cmd(table, &cmd);
+    ASSERT_EQ(ret, table->len);
+}
+
+TEST(testUtil, testHandleSelectCmd) {
+    Table_t *table = new_Table();
+    char const *args[] = { "select" };
+    Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
+    User_t user = { 1, "user", "user@example.com", 20 };
+    int ret;
+    size_t idx;
+
+    for (idx = 0; idx < 500; idx++) {
+        cmd.type = QUERY_CMD;
+        add_User(table, &user);
+        ret = handle_select_cmd(table, &cmd);
+        ASSERT_EQ(ret, table->len);
+        ASSERT_EQ(cmd.type, SELECT_CMD);
+    }
+}
+

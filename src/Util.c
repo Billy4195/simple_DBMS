@@ -64,3 +64,12 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
     return ret;
 }
 
+/*
+ * The return value is the number of rows select from table
+ * If the select operation success, then change the input arg
+ * `cmd->type` to SELECT_CMD
+ */
+int handle_select_cmd(Table_t *table, Command_t *cmd) {
+    return 0;
+}
+
