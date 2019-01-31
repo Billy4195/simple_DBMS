@@ -49,6 +49,14 @@ int handle_query_cmd(Table_t *table, Command_t *cmd) {
  * `cmd->type` to INSERT_CMD
  */
 int handle_insert_cmd(Table_t *table, Command_t *cmd) {
-    return 0;
+    int ret = 0;
+    User_t *user = command_to_User(cmd);
+    if (user) {
+        ret = add_User(table, user);
+        if (ret > 0) {
+            cmd->type = INSERT_CMD;
+        }
+    }
+    return ret;
 }
 
