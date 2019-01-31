@@ -7,6 +7,11 @@ enum {
     QUERY_CMD,
 };
 
+enum {
+    INSERT_CMD = 100,
+    SELECT_CMD,
+};
+
 typedef struct Command {
     unsigned char type;
     char **args;
