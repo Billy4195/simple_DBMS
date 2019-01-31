@@ -50,6 +50,7 @@ TEST(testUtil, testHandleSelectCmd) {
     int ret;
     size_t idx;
 
+    testing::internal::CaptureStdout();
     for (idx = 0; idx < 500; idx++) {
         cmd.type = QUERY_CMD;
         add_User(table, &user);
@@ -57,5 +58,6 @@ TEST(testUtil, testHandleSelectCmd) {
         ASSERT_EQ(ret, table->len);
         ASSERT_EQ(cmd.type, SELECT_CMD);
     }
+    testing::internal::GetCapturedStdout();
 }
 
