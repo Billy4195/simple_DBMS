@@ -42,6 +42,9 @@ int handle_query_cmd(Table_t *table, Command_t *cmd) {
     if (!strncmp(cmd->args[0], "insert", 6)) {
         handle_insert_cmd(table, cmd);
         return INSERT_CMD;
+    } else if (!strncmp(cmd->args[0], "select", 6)) {
+        handle_select_cmd(table, cmd);
+        return SELECT_CMD;
     } else {
         return UNRECOG_CMD;
     }
