@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <string.h>
 #include "Table.h"
 
 Table_t *new_Table() {
@@ -12,9 +13,13 @@ Table_t *new_Table() {
 
 
 int add_User(Table_t *table, User_t *user) {
+    size_t idx;
     if (!table || !user) {
         return 0;
     }
+    idx = table->len;
+    memcpy((table->users)+idx, user, sizeof(User_t));
+    table->len++;
     return 1;
 }
 
