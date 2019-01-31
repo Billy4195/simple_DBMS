@@ -56,7 +56,3 @@ void cleanup_Command(Command_t *cmd) {
     cmd->args_len = 0;
 }
 
-int handle_insert_cmd(Command_t *cmd) {
-    return 0;
-}
-
