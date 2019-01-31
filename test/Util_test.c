@@ -11,6 +11,15 @@ TEST(testUtil, testHandleQueryCmdInsert) {
     ASSERT_EQ(ret, INSERT_CMD);
 }
 
+TEST(testUtil, testHandleQueryCmdSelect) {
+    Table_t *table = new_Table();
+    char const *args[] = { "select" };
+    Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
+    int ret;
+    ret = handle_query_cmd(table, &cmd);
+    ASSERT_EQ(ret, SELECT_CMD);
+}
+
 TEST(testUtil, testHandleQueryCmdFail) {
     Table_t *table = new_Table();
     char const *args[] = { "unknown" };
