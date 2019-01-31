@@ -7,6 +7,10 @@
 
 void print_prompt() { printf("db > "); }
 
+void print_user(User_t *user) {
+    printf("(%d, %s, %s, %d", user->id, user->name, user->email, user->age);
+}
+
 /*
  * This function received an output argument
  * Return: category of the command
