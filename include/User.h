@@ -1,5 +1,6 @@
 #ifndef USER_H
 #define USER_H
+#include "Command.h"
 
 typedef struct User {
     unsigned int id;
@@ -9,5 +10,6 @@ typedef struct User {
 } User_t;
 
 User_t* new_User();
+User_t* command_to_User(Command_t *cmd);
 
 #endif

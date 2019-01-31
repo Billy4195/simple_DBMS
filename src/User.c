@@ -11,3 +11,11 @@ User_t* new_User() {
     return new_user;
 }
 
+/*
+ * Allocate new space for User_t
+ * The caller should free the return space
+ */
+User_t* command_to_User(Command_t *cmd) {
+    return NULL;
+}
+
