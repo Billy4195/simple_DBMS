@@ -24,3 +24,12 @@ TEST(testUser, testCommandToUserSuc) {
     free(user);
 }
 
+TEST(testUser, testCommandToUserFail) {
+    Command_t *cmd;
+    User_t *user;
+
+    cmd = NULL;
+    user = command_to_User(cmd);
+    ASSERT_EQ(user, nullptr);
+}
+
