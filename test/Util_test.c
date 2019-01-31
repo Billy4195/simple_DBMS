@@ -27,7 +27,8 @@ TEST(testUtil, testHandleInsertCmd) {
     Command_t cmd = { QUERY_CMD, (char **)args, 5, 5 };
     int ret;
     ret = handle_insert_cmd(table, &cmd);
-    ASSERT_NE(ret, 0);
+    ASSERT_EQ(ret, 1);
     ASSERT_EQ(cmd.type, INSERT_CMD);
+    ASSERT_EQ(table->len, 1);
 }
 

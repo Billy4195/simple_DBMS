@@ -43,6 +43,11 @@ int handle_query_cmd(Table_t *table, Command_t *cmd) {
     }
 }
 
+/*
+ * The return value is the number of rows insert into table
+ * If the insert operation success, then change the input arg
+ * `cmd->type` to INSERT_CMD
+ */
 int handle_insert_cmd(Table_t *table, Command_t *cmd) {
     return 0;
 }
