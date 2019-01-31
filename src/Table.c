@@ -10,3 +10,8 @@ Table_t *new_Table() {
     return table;
 }
 
+
+int add_User(Table_t *table, User_t *user) {
+    return 0;
+}
+

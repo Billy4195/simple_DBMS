@@ -12,5 +12,6 @@ typedef struct Table {
 } Table_t;
 
 Table_t *new_Table();
+int add_User(Table_t *table, User_t *user);
 
 #endif
