@@ -12,6 +12,9 @@ Table_t *new_Table() {
 
 
 int add_User(Table_t *table, User_t *user) {
-    return 0;
+    if (!table || !user) {
+        return 0;
+    }
+    return 1;
 }
 
