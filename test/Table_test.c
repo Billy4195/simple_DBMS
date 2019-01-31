@@ -32,3 +32,19 @@ TEST(testTable, testAddUserFail) {
     ASSERT_NE(add_User(table, NULL), 1);
     ASSERT_NE(add_User(NULL, &user), 1);
 }
+
+TEST(testTable, testAddUserFull) {
+    Table_t *table = new_Table();
+    User_t user = { 1, "user", "user@example.com", 20 };
+    size_t idx;
+    int ret = 0;
+    for (idx = 0; idx < MAX_TABLE_SIZE; idx++) {
+        ret = add_User(table, &user);
+        ASSERT_EQ(ret, 1);
+        ASSERT_EQ(table->len, idx+1);
+        ASSERT_TRUE(table->len <= MAX_TABLE_SIZE);
+    }
+    ret = add_User(table, &user);
+    ASSERT_NE(ret, 1);
+    ASSERT_TRUE(table->len <= MAX_TABLE_SIZE);
+}
