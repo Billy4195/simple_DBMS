@@ -14,7 +14,7 @@ Table_t *new_Table() {
 
 int add_User(Table_t *table, User_t *user) {
     size_t idx;
-    if (!table || !user) {
+    if (!table || !user || table->len == MAX_TABLE_SIZE) {
         return 0;
     }
     idx = table->len;
