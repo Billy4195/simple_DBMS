@@ -38,3 +38,13 @@ TEST(testCommand, testAddArg) {
     }
 }
 
+TEST(testCommand, testHandleInsertCmd) {
+    char const *args[] = { "insert", "1", "user1", \
+            "user1@example.com", "21" };
+    Command_t cmd = { QUERY_CMD, (char **)args, 5, 5 };
+    int ret;
+    ret = handle_insert_cmd(&cmd);
+    ASSERT_NE(ret, 0);
+    ASSERT_EQ(cmd.type, INSERT_CMD);
+}
+
