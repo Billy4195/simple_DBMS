@@ -33,9 +33,12 @@ void handle_builtin_cmd(Command_t *cmd) {
     }
 }
 
-void handle_query_cmd(Command_t *cmd) {
+int handle_query_cmd(Command_t *cmd) {
     if (!strncmp(cmd->args[0], "insert", 6)) {
         printf("The insert query should be implemented in here\n");
+        return INSERT_CMD;
+    } else {
+        return UNRECOG_CMD;
     }
 }
 
