@@ -24,3 +24,11 @@ TEST(testTable, testAddUserSuc) {
     ASSERT_STREQ(table->users[0].email, user.email);
     ASSERT_EQ(table->users[0].age, user.age);
 }
+
+TEST(testTable, testAddUserFail) {
+    Table_t *table = new_Table();
+    User_t user = { 1, "First User", "first@example.com", 21 };
+    ASSERT_NE(add_User(NULL, NULL), 1);
+    ASSERT_NE(add_User(table, NULL), 1);
+    ASSERT_NE(add_User(NULL, &user), 1);
+}
