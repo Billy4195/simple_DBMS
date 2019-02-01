@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "Table.h"
 
 Table_t *new_Table(char *file_name) {
@@ -10,7 +11,14 @@ Table_t *new_Table(char *file_name) {
                             sizeof(User_t) * MAX_TABLE_SIZE);
     table->fp = NULL;
     if (file_name != NULL) {
-
+        struct stat st;
+        if (stat(file_name, &st) != 0) {
+            //Create new file
+            table->fp = fopen(file_name, "wb");
+        } else {
+            table->fp = fopen(file_name, "a+b");
+            table->len = st.st_size / sizeof(User_t);
+        }
     }
     return table;
 }
