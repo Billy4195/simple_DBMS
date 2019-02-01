@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <sys/stat.h>
 #include "gtest/gtest.h"
 #include "Table.h"
 #include "User.h"
@@ -9,6 +11,51 @@ TEST(testTable, testNewTable) {
     ASSERT_EQ(table->len, 0);
     ASSERT_NE(table->users, nullptr);
     ASSERT_EQ(table->fp, nullptr);
+}
+
+TEST(testTable, testNewTableWithFile) {
+    char file_name[] = "./test/test.db";
+    Table_t *table = new_Table(file_name);
+    struct stat st;
+
+    ASSERT_NE(table, nullptr);
+    ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
+    ASSERT_EQ(table->len, 0);
+    ASSERT_NE(table->users, nullptr);
+    ASSERT_NE(table->fp, nullptr);
+    fclose(table->fp);
+    remove(file_name);
+    ASSERT_NE(stat(file_name, &st), 0);
+}
+
+TEST(testTable, testNewTableWithOldFile) {
+    char file_name[] = "./test/test.db";
+    FILE *fp;
+    Table_t *table;
+    struct stat st;
+    User_t users[] = {
+        { 1, "user1", "user1@example.com", 20},
+        { 2, "user2", "user2@example.com", 22},
+    };
+
+    fp = fopen(file_name, "wb");
+    fwrite((void*)users, sizeof(User_t), 2, fp);
+    fclose(fp);
+    {
+        struct stat st;
+        ASSERT_EQ(stat(file_name, &st), 0);
+        ASSERT_EQ(st.st_size, sizeof(User_t)*2);
+    }
+
+    table = new_Table(file_name);
+    ASSERT_NE(table, nullptr);
+    ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
+    ASSERT_EQ(table->len, 2);
+    ASSERT_NE(table->users, nullptr);
+    ASSERT_NE(table->fp, nullptr);
+    fclose(table->fp);
+    remove(file_name);
+    ASSERT_NE(stat(file_name, &st), 0);
 }
 
 TEST(testTable, testAddUserSuc) {
