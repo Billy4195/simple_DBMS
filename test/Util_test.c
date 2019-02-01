@@ -3,7 +3,7 @@
 #include "Table.h"
 
 TEST(testUtil, testHandleQueryCmdInsert) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     char const *args[] = { "insert" };
     Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
     int ret;
@@ -12,7 +12,7 @@ TEST(testUtil, testHandleQueryCmdInsert) {
 }
 
 TEST(testUtil, testHandleQueryCmdSelect) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     char const *args[] = { "select" };
     Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
     int ret;
@@ -21,7 +21,7 @@ TEST(testUtil, testHandleQueryCmdSelect) {
 }
 
 TEST(testUtil, testHandleQueryCmdFail) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     char const *args[] = { "unknown" };
     Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
     int ret;
@@ -30,7 +30,7 @@ TEST(testUtil, testHandleQueryCmdFail) {
 }
 
 TEST(testUtil, testHandleInsertCmd) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     char const *args[] = { "insert", "1", "user1", \
             "user1@example.com", "21" };
     Command_t cmd = { QUERY_CMD, (char **)args, 5, 5 };
@@ -42,7 +42,7 @@ TEST(testUtil, testHandleInsertCmd) {
 }
 
 TEST(testUtil, testHandleSelectCmdEmpty) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     char const *args[] = { "select" };
     Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
     int ret;
@@ -52,7 +52,7 @@ TEST(testUtil, testHandleSelectCmdEmpty) {
 }
 
 TEST(testUtil, testHandleSelectCmd) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     char const *args[] = { "select" };
     Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
     User_t user = { 1, "user", "user@example.com", 20 };

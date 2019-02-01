@@ -3,15 +3,16 @@
 #include "User.h"
 
 TEST(testTable, testNewTable) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     ASSERT_NE(table, nullptr);
     ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
     ASSERT_EQ(table->len, 0);
     ASSERT_NE(table->users, nullptr);
+    ASSERT_EQ(table->fp, nullptr);
 }
 
 TEST(testTable, testAddUserSuc) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     ASSERT_NE(table, nullptr);
 
     User_t user = { 1, "First User", "first@example.com", 21 };
@@ -26,7 +27,7 @@ TEST(testTable, testAddUserSuc) {
 }
 
 TEST(testTable, testAddUserFail) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     User_t user = { 1, "First User", "first@example.com", 21 };
     ASSERT_NE(add_User(NULL, NULL), 1);
     ASSERT_NE(add_User(table, NULL), 1);
@@ -34,7 +35,7 @@ TEST(testTable, testAddUserFail) {
 }
 
 TEST(testTable, testAddUserFull) {
-    Table_t *table = new_Table();
+    Table_t *table = new_Table(NULL);
     User_t user = { 1, "user", "user@example.com", 20 };
     size_t idx;
     int ret = 0;
