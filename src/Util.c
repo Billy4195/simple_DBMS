@@ -32,8 +32,9 @@ int parse_input(char *input, Command_t *cmd) {
     return cmd->type;
 }
 
-void handle_builtin_cmd(Command_t *cmd) {
+void handle_builtin_cmd(Table_t *table, Command_t *cmd) {
     if (!strncmp(cmd->args[0], ".exit", 5)) {
+        archive_table(table);
         exit(0);
     } else {
 
