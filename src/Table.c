@@ -41,6 +41,22 @@ int add_User(Table_t *table, User_t *user) {
  * Return value is the archived table len
  */
 int archive_table(Table_t *table) {
-    return 0;
+    size_t archived_len;
+    struct stat st;
+
+    if (stat(table->file_name, &st) == 0) {
+        archived_len = st.st_size / sizeof(User_t);
+    } else {
+        archived_len = 0;
+    }
+    fwrite((void*)(table->users+archived_len), \
+            sizeof(User_t), table->len-archived_len, \
+            table->fp);
+
+    fclose(table->fp);
+    free(table->file_name);
+    table->fp = NULL;
+    table->file_name = NULL;
+    return table->len;
 }
 
