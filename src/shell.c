@@ -6,17 +6,25 @@
 #include "Table.h"
 
 
-int main() {
+int main(int argc, char **argv) {
     InputBuffer_t *input_buffer = new_InputBuffer();
     Command_t *cmd = new_Command();
-    Table_t *table = new_Table();
+    Table_t *table = NULL;
     int cmd_type;
+    if (argc != 2) {
+        table = new_Table(NULL);
+    } else {
+        table = new_Table(argv[1]);
+    }
+    if (table == NULL) {
+        return 1;
+    }
     for (;;) {
         print_prompt();
         read_input(input_buffer);
         cmd_type = parse_input(input_buffer->buffer, cmd);
         if (cmd_type == BUILT_IN_CMD) {
-            handle_builtin_cmd(cmd);
+            handle_builtin_cmd(table, cmd);
         } else if (cmd_type == QUERY_CMD) {
             handle_query_cmd(table, cmd);
         } else if (cmd_type == UNRECOG_CMD) {
