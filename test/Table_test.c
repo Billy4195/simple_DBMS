@@ -168,3 +168,15 @@ TEST(testTable, testArchiveOldTable) {
     ASSERT_NE(stat(file_name, &st), 0);
 }
 
+TEST(testTable, testArchiveTableNULL) {
+    Table_t *table = new_Table(NULL);
+    int ret;
+    ASSERT_NE(table, nullptr);
+    ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
+    ASSERT_EQ(table->len, 0);
+    ASSERT_NE(table->users, nullptr);
+    ASSERT_EQ(table->fp, nullptr);
+
+    ret = archive_table(table);
+    ASSERT_EQ(ret, 0);
+}
