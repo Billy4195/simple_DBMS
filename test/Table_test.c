@@ -124,3 +124,41 @@ TEST(testTable, testArchiveTable) {
     ASSERT_NE(stat(file_name, &st), 0);
 }
 
+TEST(testTable, testArchiveOldTable) {
+    char file_name[] = "./test/test.db";
+    FILE *fp;
+    Table_t *table;
+    struct stat st;
+    User_t users[] = {
+        { 1, "user1", "user1@example.com", 20},
+        { 2, "user2", "user2@example.com", 22},
+    };
+    User_t user = { 3, "user", "user@example.com", 20 };
+    const size_t insert_count = 5;
+    size_t idx;
+    int ret;
+
+    fp = fopen(file_name, "wb");
+    fwrite((void*)users, sizeof(User_t), 2, fp);
+    fclose(fp);
+    {
+        struct stat st;
+        ASSERT_EQ(stat(file_name, &st), 0);
+        ASSERT_EQ(st.st_size, sizeof(User_t)*2);
+    }
+
+    table = new_Table(file_name);
+    for (idx = 0; idx < insert_count; idx++) {
+        ret = add_User(table, &user);
+        EXPECT_EQ(ret, 1);
+    }
+    ret = archive_table(table);
+    EXPECT_EQ(ret, (int)insert_count+2);
+    EXPECT_EQ(stat(file_name, &st), 0);
+    EXPECT_EQ(st.st_size, sizeof(User_t)*(insert_count+2));
+
+    fclose(table->fp);
+    remove(file_name);
+    ASSERT_NE(stat(file_name, &st), 0);
+}
+
