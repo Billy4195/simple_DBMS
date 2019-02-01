@@ -121,7 +121,9 @@ TEST(testTable, testArchiveTable) {
     EXPECT_EQ(stat(file_name, &st), 0);
     EXPECT_EQ(st.st_size, sizeof(User_t)*insert_count);
 
-    fclose(table->fp);
+    if (table->fp) {
+        fclose(table->fp);
+    }
     remove(file_name);
     ASSERT_NE(stat(file_name, &st), 0);
 }
@@ -159,7 +161,9 @@ TEST(testTable, testArchiveOldTable) {
     EXPECT_EQ(stat(file_name, &st), 0);
     EXPECT_EQ(st.st_size, sizeof(User_t)*(insert_count+2));
 
-    fclose(table->fp);
+    if (table->fp) {
+        fclose(table->fp);
+    }
     remove(file_name);
     ASSERT_NE(stat(file_name, &st), 0);
 }
