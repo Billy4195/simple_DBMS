@@ -44,6 +44,9 @@ int archive_table(Table_t *table) {
     size_t archived_len;
     struct stat st;
 
+    if (table->fp == NULL) {
+        return 0;
+    }
     if (stat(table->file_name, &st) == 0) {
         archived_len = st.st_size / sizeof(User_t);
     } else {
