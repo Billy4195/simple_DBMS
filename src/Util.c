@@ -22,10 +22,12 @@ int parse_input(char *input, Command_t *cmd) {
         cmd->type = BUILT_IN_CMD;
     } else if (!strncmp(token, "insert", 6)) {
         cmd->type = QUERY_CMD;
+    } else if (!strncmp(token, "select", 6)) {
+        cmd->type = QUERY_CMD;
     }
     while (token != NULL) {
         add_Arg(cmd, token);
-        token = strtok(NULL, " ");
+        token = strtok(NULL, " \n");
     }
     return cmd->type;
 }
