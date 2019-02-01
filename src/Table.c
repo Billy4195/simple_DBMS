@@ -10,6 +10,7 @@ Table_t *new_Table(char *file_name) {
     table->users = (User_t*)malloc(
                             sizeof(User_t) * MAX_TABLE_SIZE);
     table->fp = NULL;
+    table->file_name = NULL;
     if (file_name != NULL) {
         struct stat st;
         if (stat(file_name, &st) != 0) {
@@ -19,6 +20,7 @@ Table_t *new_Table(char *file_name) {
             table->fp = fopen(file_name, "a+b");
             table->len = st.st_size / sizeof(User_t);
         }
+        table->file_name = strdup(file_name);
     }
     return table;
 }

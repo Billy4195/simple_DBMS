@@ -23,6 +23,7 @@ TEST(testTable, testNewTableWithFile) {
     ASSERT_EQ(table->len, 0);
     ASSERT_NE(table->users, nullptr);
     ASSERT_NE(table->fp, nullptr);
+    ASSERT_STREQ(table->file_name, file_name);
     fclose(table->fp);
     remove(file_name);
     ASSERT_NE(stat(file_name, &st), 0);
@@ -53,6 +54,7 @@ TEST(testTable, testNewTableWithOldFile) {
     ASSERT_EQ(table->len, 2);
     ASSERT_NE(table->users, nullptr);
     ASSERT_NE(table->fp, nullptr);
+    ASSERT_STREQ(table->file_name, file_name);
     fclose(table->fp);
     remove(file_name);
     ASSERT_NE(stat(file_name, &st), 0);

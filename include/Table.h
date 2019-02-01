@@ -11,6 +11,7 @@ typedef struct Table {
     size_t len;
     User_t *users;
     FILE *fp;
+    char *file_name;
 } Table_t;
 
 Table_t *new_Table(char *file_name);
