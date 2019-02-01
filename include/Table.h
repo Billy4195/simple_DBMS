@@ -15,5 +15,6 @@ typedef struct Table {
 
 Table_t *new_Table(char *file_name);
 int add_User(Table_t *table, User_t *user);
+int archive_table(Table_t *table);
 
 #endif

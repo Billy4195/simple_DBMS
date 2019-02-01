@@ -35,3 +35,10 @@ int add_User(Table_t *table, User_t *user) {
     return 1;
 }
 
+/*
+ * Return value is the archived table len
+ */
+int archive_table(Table_t *table) {
+    return 0;
+}
+
