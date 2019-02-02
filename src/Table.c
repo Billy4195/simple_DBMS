@@ -36,6 +36,7 @@ int add_User(Table_t *table, User_t *user) {
     }
     idx = table->len;
     memcpy((table->users)+idx, user, sizeof(User_t));
+    table->cache_map[idx] = 1;
     table->len++;
     return 1;
 }
