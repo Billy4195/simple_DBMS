@@ -6,11 +6,112 @@
 
 TEST(testTable, testNewTable) {
     Table_t *table = new_Table(NULL);
+    size_t idx;
     ASSERT_NE(table, nullptr);
     ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
     ASSERT_EQ(table->len, 0);
     ASSERT_NE(table->users, nullptr);
+    ASSERT_NE(table->cache_map, nullptr);
+    for (idx = 0; idx < MAX_TABLE_SIZE; idx++) {
+        ASSERT_FALSE(table->cache_map[idx]);
+    }
     ASSERT_EQ(table->fp, nullptr);
+}
+
+TEST(testTable, testCacheMapMem) {
+    Table_t *table = new_Table(NULL);
+    User_t user = { 1, "user", "user@example.com", 20 };
+    size_t idx;
+    int ret = 0;
+    const size_t insert_count = 50;
+    for (idx = 0; idx < insert_count; idx++) {
+        ret = add_User(table, &user);
+        ASSERT_EQ(ret, 1);
+        ASSERT_EQ(table->len, idx+1);
+        ASSERT_TRUE(table->len <= MAX_TABLE_SIZE);
+    }
+    for (idx = 0; idx < insert_count; idx++) {
+        ASSERT_TRUE(table->cache_map[idx]);
+    }
+}
+
+TEST(testTable, testCacheMap) {
+    char file_name[] = "./test/test.db";
+    Table_t *table = new_Table(file_name);
+    User_t user = { 1, "user", "user@example.com", 20 };
+    size_t idx;
+    int ret = 0;
+    const size_t insert_count = 50;
+    for (idx = 0; idx < insert_count; idx++) {
+        ret = add_User(table, &user);
+        ASSERT_EQ(ret, 1);
+        ASSERT_EQ(table->len, idx+1);
+        ASSERT_TRUE(table->len <= MAX_TABLE_SIZE);
+    }
+    for (idx = 0; idx < insert_count; idx++) {
+        ASSERT_TRUE(table->cache_map[idx]);
+    }
+}
+
+TEST(testTable, testCacheMapWithArchiveFile) {
+    char file_name[] = "./test/test.db";
+    Table_t *table;
+    User_t user = { 1, "user", "user@example.com", 20 };
+    User_t users[] = {
+        { 1, "user1", "user1@example.com", 20},
+        { 2, "user2", "user2@example.com", 22},
+    };
+    User_t *tmp_user;
+    size_t idx;
+    int ret = 0;
+    const size_t insert_count = 50;
+    struct stat st;
+
+    {
+        FILE *fp = fopen(file_name, "wb");
+        fwrite((void*)users, sizeof(User_t), 2, fp);
+        fclose(fp);
+    }
+
+    table = new_Table(file_name);
+
+    ASSERT_FALSE(table->cache_map[0]);
+    ASSERT_FALSE(table->cache_map[1]);
+
+    for (idx = 0; idx < insert_count; idx++) {
+        ret = add_User(table, &user);
+        ASSERT_EQ(ret, 1);
+    }
+    for (idx = 2; idx < insert_count+2; idx++) {
+        ASSERT_TRUE(table->cache_map[idx]);
+    }
+
+    tmp_user = get_User(table, 0);
+    ASSERT_TRUE(table->cache_map[0]);
+    ASSERT_NE(tmp_user, nullptr);
+    EXPECT_EQ(tmp_user->id, users[0].id);
+    EXPECT_STREQ(tmp_user->name, users[0].name);
+    EXPECT_STREQ(tmp_user->email, users[0].email);
+    EXPECT_EQ(tmp_user->age, users[0].age);
+
+    tmp_user = get_User(table, 1);
+    ASSERT_TRUE(table->cache_map[1]);
+    ASSERT_NE(tmp_user, nullptr);
+    EXPECT_EQ(tmp_user->id, users[1].id);
+    EXPECT_STREQ(tmp_user->name, users[1].name);
+    EXPECT_STREQ(tmp_user->email, users[1].email);
+    EXPECT_EQ(tmp_user->age, users[1].age);
+
+    tmp_user = get_User(table, 2);
+    for (idx = 2; idx < insert_count+2; idx++) {
+        ASSERT_TRUE(table->cache_map[idx]);
+    }
+
+    if (table->fp) {
+        fclose(table->fp);
+    }
+    remove(file_name);
+    ASSERT_NE(stat(file_name, &st), 0);
 }
 
 TEST(testTable, testNewTableWithFile) {

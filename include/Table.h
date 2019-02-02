@@ -10,6 +10,7 @@ typedef struct Table {
     size_t capacity;
     size_t len;
     User_t *users;
+    unsigned char *cache_map;
     FILE *fp;
     char *file_name;
 } Table_t;

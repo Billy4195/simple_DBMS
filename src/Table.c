@@ -5,10 +5,13 @@
 
 Table_t *new_Table(char *file_name) {
     Table_t *table = (Table_t*)malloc(sizeof(Table_t));
+    memset((void*)table, 0, sizeof(Table_t));
     table->capacity = MAX_TABLE_SIZE;
     table->len = 0;
     table->users = (User_t*)malloc(
                             sizeof(User_t) * MAX_TABLE_SIZE);
+    table->cache_map = (unsigned char*)malloc(sizeof(char)*MAX_TABLE_SIZE);
+    memset(table->cache_map, 0, sizeof(char)*MAX_TABLE_SIZE);
     table->fp = NULL;
     table->file_name = NULL;
     if (file_name != NULL) {
