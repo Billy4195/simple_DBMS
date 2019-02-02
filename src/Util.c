@@ -78,7 +78,7 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
     size_t idx;
     for (idx = 0; idx < table->len; idx++) {
-        print_user((table->users)+idx);
+        print_user(get_User(table, idx));
     }
     cmd->type = SELECT_CMD;
     return table->len;
