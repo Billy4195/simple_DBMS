@@ -2,6 +2,12 @@
 #include "Util.h"
 #include "Table.h"
 
+TEST(testUtil, testNewState) {
+    State_t *state = new_State();
+    ASSERT_NE(state, nullptr);
+    ASSERT_EQ(state->saved_stdout, -1);
+}
+
 TEST(testUtil, testHandleQueryCmdInsert) {
     Table_t *table = new_Table(NULL);
     char const *args[] = { "insert" };

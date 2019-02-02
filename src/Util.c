@@ -5,6 +5,10 @@
 #include "Command.h"
 #include "Table.h"
 
+State_t* new_State() {
+    return NULL;
+}
+
 void print_prompt() { printf("db > "); }
 
 void print_user(User_t *user) {
