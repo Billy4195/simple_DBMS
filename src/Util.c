@@ -6,7 +6,9 @@
 #include "Table.h"
 
 State_t* new_State() {
-    return NULL;
+    State_t *state = (State_t*)malloc(sizeof(State_t));
+    state->saved_stdout = -1;
+    return state;
 }
 
 void print_prompt() { printf("db > "); }
