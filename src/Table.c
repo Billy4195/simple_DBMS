@@ -68,6 +68,28 @@ int archive_table(Table_t *table) {
 }
 
 User_t* get_User(Table_t *table, size_t idx) {
+    size_t archived_len;
+    struct stat st;
+    if (!table->cache_map[idx]) {
+        if (idx > MAX_TABLE_SIZE) {
+            goto error;
+        }
+        if (stat(table->file_name, &st) != 0) {
+            goto error;
+        }
+        archived_len = st.st_size / sizeof(User_t);
+        if (idx >= archived_len) {
+            //neither in file, nor in memory
+            goto error;
+        }
+
+        fseek(table->fp, idx*sizeof(User_t), SEEK_SET);
+        fread(table->users+idx, sizeof(User_t), 1, table->fp);
+        table->cache_map[idx] = 1;
+    }
+    return table->users+idx;
+
+error:
     return NULL;
 }
 
