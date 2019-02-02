@@ -24,7 +24,8 @@ shell: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 check: $(TESTS)
-	./test/all_test
+	-./test/all_test
+	find test/ -name "*.db" -delete
 
 $(TESTS): $(TEST_SRC) $(DEP_SRC) $(DEPS)
 	$(CXX) -o $@ $(TEST_SRC) $(DEP_SRC) $(CFLAGS) $(TEST_FLAGS)
@@ -32,4 +33,4 @@ $(TESTS): $(TEST_SRC) $(DEP_SRC) $(DEPS)
 .PHONY: clean check
 
 clean:
-	rm $(TARGET) $(OBJ) $(TESTS)
+	rm $(TARGET) $(OBJ) $(TESTS) $(wildcard test/*.db)
