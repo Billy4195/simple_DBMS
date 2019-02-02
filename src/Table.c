@@ -63,3 +63,7 @@ int archive_table(Table_t *table) {
     return table->len;
 }
 
+User_t* get_User(Table_t *table, size_t idx) {
+    return NULL;
+}
+
