@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <fcntl.h>
 #include "Util.h"
 #include "Command.h"
 #include "Table.h"
@@ -11,7 +14,11 @@ State_t* new_State() {
     return state;
 }
 
-void print_prompt() { printf("db > "); }
+void print_prompt(State_t *state) {
+    if (state->saved_stdout == -1) {
+        printf("db > ");
+    }
+}
 
 void print_user(User_t *user) {
     printf("(%d, %s, %s, %d)\n", user->id, user->name, user->email, user->age);
@@ -30,6 +37,8 @@ int parse_input(char *input, Command_t *cmd) {
         cmd->type = QUERY_CMD;
     } else if (!strncmp(token, "select", 6)) {
         cmd->type = QUERY_CMD;
+    } else if (!strncmp(token, ".output", 7)) {
+        cmd->type = BUILT_IN_CMD;
     }
     while (token != NULL) {
         add_Arg(cmd, token);
@@ -38,12 +47,24 @@ int parse_input(char *input, Command_t *cmd) {
     return cmd->type;
 }
 
-void handle_builtin_cmd(Table_t *table, Command_t *cmd) {
+void handle_builtin_cmd(Table_t *table, Command_t *cmd, State_t *state) {
     if (!strncmp(cmd->args[0], ".exit", 5)) {
         archive_table(table);
         exit(0);
-    } else {
-
+    } else if (!strncmp(cmd->args[0], ".output", 7)) {
+        if (cmd->args_len == 2) {
+            if (!strncmp(cmd->args[1], "stdout", 6)) {
+                close(1);
+                dup2(state->saved_stdout, 1);
+                state->saved_stdout = -1;
+            } else if (state->saved_stdout == -1) {
+                int fd = creat(cmd->args[1], 0644);
+                state->saved_stdout = dup(1);
+                if (dup2(fd, 1) == -1) {
+                    state->saved_stdout = -1;
+                }
+            }
+        }
     }
 }
 
