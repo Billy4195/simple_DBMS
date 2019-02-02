@@ -15,7 +15,7 @@ TEST_SRC=$(wildcard $(TEST_SRC_DIR)/*_test.c)
 TESTS=$(patsubst $(TEST_SRC_DIR)/%_test.c, $(TEST_SRC_DIR)/%_test,$(TEST_SRC))
 TEST_FLAGS=-lgtest -pthread -std=c++11
 
-all: $(TARGET) $(TESTS)
+all: $(TARGET)
 
 %.o: %.c $(DEPS)
 	$(CC) -o $@ $< -c $(CFLAGS)
