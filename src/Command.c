@@ -43,9 +43,6 @@ error:
     return 1;
 }
 
-/*
- * TODO: This func will release the allocated args memories
- */
 void cleanup_Command(Command_t *cmd) {
     size_t idx;
     for (idx = 0; idx < cmd->args_cap; idx++) {
