@@ -30,15 +30,12 @@ void print_user(User_t *user) {
  */
 int parse_input(char *input, Command_t *cmd) {
     char *token;
+    int idx;
     token = strtok(input, " \n");
-    if (!strncmp(token, ".exit", 5)) {
-        cmd->type = BUILT_IN_CMD;
-    } else if (!strncmp(token, "insert", 6)) {
-        cmd->type = QUERY_CMD;
-    } else if (!strncmp(token, "select", 6)) {
-        cmd->type = QUERY_CMD;
-    } else if (!strncmp(token, ".output", 7)) {
-        cmd->type = BUILT_IN_CMD;
+    for (idx = 0; strlen(cmd_list[idx].name) != 0; idx++) {
+        if (!strncmp(token, cmd_list[idx].name, cmd_list[idx].len)) {
+            cmd->type = cmd_list[idx].type;
+        }
     }
     while (token != NULL) {
         add_Arg(cmd, token);
