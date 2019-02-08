@@ -12,6 +12,14 @@ enum {
     SELECT_CMD,
 };
 
+typedef struct {
+    char name[256];
+    int len;
+    unsigned char type;
+} CMD_t;
+
+extern CMD_t cmd_list[];
+
 typedef struct Command {
     unsigned char type;
     char **args;
