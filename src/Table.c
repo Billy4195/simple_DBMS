@@ -72,7 +72,26 @@ int archive_table(Table_t *table) {
  * Return value: the number of records in the db file
  */
 int load_table(Table_t *table, char *file_name) {
-    return 0;
+    struct stat st;
+    if (table->fp != NULL) {
+        fclose(table->fp);
+        free(table->file_name);
+        table->fp = NULL;
+        table->file_name = NULL;
+    }
+    if (file_name != NULL) {
+        table->len = 0;
+        memset(table->cache_map, 0, sizeof(char)*MAX_TABLE_SIZE);
+        if (stat(file_name, &st) != 0) {
+            //Create new file
+            table->fp = fopen(file_name, "wb");
+        } else {
+            table->fp = fopen(file_name, "a+b");
+            table->len = st.st_size / sizeof(User_t);
+        }
+        table->file_name = strdup(file_name);
+    }
+    return table->len;
 }
 
 User_t* get_User(Table_t *table, size_t idx) {
