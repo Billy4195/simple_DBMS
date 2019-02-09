@@ -14,17 +14,7 @@ Table_t *new_Table(char *file_name) {
     memset(table->cache_map, 0, sizeof(char)*MAX_TABLE_SIZE);
     table->fp = NULL;
     table->file_name = NULL;
-    if (file_name != NULL) {
-        struct stat st;
-        if (stat(file_name, &st) != 0) {
-            //Create new file
-            table->fp = fopen(file_name, "wb");
-        } else {
-            table->fp = fopen(file_name, "a+b");
-            table->len = st.st_size / sizeof(User_t);
-        }
-        table->file_name = strdup(file_name);
-    }
+    load_table(table, file_name);
     return table;
 }
 
