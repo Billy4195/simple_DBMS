@@ -66,6 +66,8 @@ void handle_builtin_cmd(Table_t *table, Command_t *cmd, State_t *state) {
         if (cmd->args_len == 2) {
             load_table(table, cmd->args[1]);
         }
+    } else if (!strncmp(cmd->args[0], ".help", 5)) {
+        print_help_msg();
     }
 }
 
@@ -110,5 +112,47 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
     }
     cmd->type = SELECT_CMD;
     return table->len;
+}
+
+void print_help_msg() {
+    const char msg[] = "# Support Command\n"
+    "\n"
+    "## Built-in Commands\n"
+    "\n"
+    "  * .exit\n"
+    "\tThis cmd archives the table, if the db file is specified, then exit.\n"
+    "\n"
+    "  * .output\n"
+    "\tThis cmd change the output strategy, default is stdout.\n"
+    "\n"
+    "\tUsage:\n"
+    "\t    .output (<file>|stdout)\n\n"
+    "\tThe results will be redirected to <file> if specified, otherwise they will display to stdout.\n"
+    "\n"
+    "  * .load\n"
+    "\tThis command loads records stored in <DB file>.\n"
+    "\n"
+    "\t*** Warning: This command will overwrite the records already stored in current table. ***\n"
+    "\n"
+    "\tUsage:\n"
+    "\t    .load <DB file>\n\n"
+    "\n"
+    "  * .help\n"
+    "\tThis cmd displays the help messages.\n"
+    "\n"
+    "## Query Commands\n"
+    "\n"
+    "  * insert\n"
+    "\tThis cmd inserts one user record into table.\n"
+    "\n"
+    "\tUsage:\n"
+    "\t    insert <id> <name> <email> <age>\n"
+    "\n"
+    "\t** Notice: The <name> & <email> are string without any whitespace character, and maximum length of them is 255. **\n"
+    "\n"
+    "  * select\n"
+    "\tThis cmd will display all user records in the table.\n"
+    "\n";
+    printf("%s", msg);
 }
 
