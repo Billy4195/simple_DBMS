@@ -67,6 +67,14 @@ int archive_table(Table_t *table) {
     return table->len;
 }
 
+/*
+ * Loading the db file will overwrite the existed records in table, only if the ``file_name`` is NULL
+ * Return value: the number of records in the db file
+ */
+int load_table(Table_t *table, char *file_name) {
+    return 0;
+}
+
 User_t* get_User(Table_t *table, size_t idx) {
     size_t archived_len;
     struct stat st;

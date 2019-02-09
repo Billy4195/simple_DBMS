@@ -355,3 +355,72 @@ TEST(testTable, testGetUserFile) {
     ASSERT_NE(stat(file_name, &st), 0);
 }
 
+TEST(testTable, testLoadTableEmpty) {
+    char file_name[] = "./test/test.db";
+    Table_t *table;
+    int idx, ret;
+
+    setup_sample_db_file(file_name, 2);
+
+    table = new_Table(NULL);
+
+    ret = load_table(table, file_name);
+
+    ASSERT_EQ(ret, table->len);
+    ASSERT_EQ(ret, 2);
+    ASSERT_NE(table->fp, nullptr);
+    ASSERT_NE(table->file_name, nullptr);
+    ASSERT_EQ(table->len, 2);
+    for (idx = 0; idx < 2; idx++) {
+        ASSERT_FALSE(table->cache_map[idx]);
+    }
+}
+
+TEST(testTable, testLoadTable) {
+    char file_name[] = "./test/test.db";
+    Table_t *table;
+    int idx, ret;
+    User_t sample_user;
+    const int insert_count = 50;
+
+    setup_sample_db_file(file_name, 2);
+
+    table = new_Table(NULL);
+    for (idx = 0; idx < insert_count; idx++) {
+        setup_sample_user(&sample_user, idx);
+        add_User(table, &sample_user);
+    }
+
+    ret = load_table(table, file_name);
+
+    ASSERT_EQ(ret, 2);
+    ASSERT_NE(table->fp, nullptr);
+    ASSERT_NE(table->file_name, nullptr);
+    ASSERT_EQ(table->len, 2);
+    for (idx = 0; idx < insert_count; idx++) {
+        ASSERT_FALSE(table->cache_map[idx]);
+    }
+}
+
+TEST(testTable, testLoadTableNULL) {
+    Table_t *table;
+    int idx, ret;
+    User_t sample_user;
+    const int insert_count = 50;
+
+    table = new_Table(NULL);
+    for (idx = 0; idx < insert_count; idx++) {
+        setup_sample_user(&sample_user, idx);
+        add_User(table, &sample_user);
+    }
+
+    ret = load_table(table, NULL);
+
+    ASSERT_EQ(ret, insert_count);
+    ASSERT_EQ(table->fp, nullptr);
+    ASSERT_EQ(table->file_name, nullptr);
+    ASSERT_EQ(table->len, insert_count);
+    for (idx = 0; idx < insert_count; idx++) {
+        ASSERT_TRUE(table->cache_map[idx]);
+    }
+}
