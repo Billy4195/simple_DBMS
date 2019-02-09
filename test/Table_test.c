@@ -369,7 +369,7 @@ TEST(testTable, testLoadTableEmpty) {
     ASSERT_EQ(ret, table->len);
     ASSERT_EQ(ret, 2);
     ASSERT_NE(table->fp, nullptr);
-    ASSERT_NE(table->file_name, nullptr);
+    ASSERT_STREQ(table->file_name, file_name);
     ASSERT_EQ(table->len, 2);
     for (idx = 0; idx < 2; idx++) {
         ASSERT_FALSE(table->cache_map[idx]);
@@ -395,7 +395,7 @@ TEST(testTable, testLoadTable) {
 
     ASSERT_EQ(ret, 2);
     ASSERT_NE(table->fp, nullptr);
-    ASSERT_NE(table->file_name, nullptr);
+    ASSERT_STREQ(table->file_name, file_name);
     ASSERT_EQ(table->len, 2);
     for (idx = 0; idx < insert_count; idx++) {
         ASSERT_FALSE(table->cache_map[idx]);
