@@ -5,6 +5,7 @@
 CMD_t cmd_list[] = {
     { ".exit", 5, BUILT_IN_CMD },
     { ".output", 7, BUILT_IN_CMD },
+    { ".load", 5, BUILT_IN_CMD },
     { "insert", 6, QUERY_CMD },
     { "select", 6, QUERY_CMD },
     { "", 0, UNRECOG_CMD },
