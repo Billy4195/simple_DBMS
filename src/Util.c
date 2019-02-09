@@ -62,6 +62,10 @@ void handle_builtin_cmd(Table_t *table, Command_t *cmd, State_t *state) {
                 }
             }
         }
+    } else if (!strncmp(cmd->args[0], ".load", 5)) {
+        if (cmd->args_len == 2) {
+            load_table(table, cmd->args[1]);
+        }
     }
 }
 
