@@ -75,11 +75,19 @@ TEST(testTable, testCacheMapMem) {
 
 TEST(testTable, testCacheMap) {
     char file_name[] = "./test/test.db";
-    Table_t *table = new_Table(file_name);
+    Table_t *table;
     User_t user = { 1, "user", "user@example.com", 20 };
     size_t idx;
     int ret = 0;
+    struct stat st;
     const size_t insert_count = 50;
+
+    if (stat(file_name, &st) == 0) {
+        remove(file_name);
+        ASSERT_NE(stat(file_name, &st), 0);
+    }
+    table = new_Table(file_name);
+
     for (idx = 0; idx < insert_count; idx++) {
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
