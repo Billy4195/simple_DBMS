@@ -24,6 +24,15 @@ This project is a simple DBMS implemented using C, as the education material of 
 
 ***The current table schema is hard coded, the schema in the [include/User.h](include/User.h), you can check the User_t to get the detail of each field.***
 
+### Table schema
+#### `User` table
+| field_name | data_type |
+|---|---|
+| id | int |
+| name | char[255] |
+| email | char[255] |
+| age | int |
+
 ### Supported command
 | Command | Description |
 |---|---| 
