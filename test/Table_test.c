@@ -46,11 +46,11 @@ TEST(testTable, testNewTable) {
     Table_t *table = new_Table(NULL);
     size_t idx;
     ASSERT_NE(table, nullptr);
-    ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
+    ASSERT_EQ(table->capacity, INIT_TABLE_SIZE);
     ASSERT_EQ(table->len, 0);
     ASSERT_NE(table->users, nullptr);
     ASSERT_NE(table->cache_map, nullptr);
-    for (idx = 0; idx < MAX_TABLE_SIZE; idx++) {
+    for (idx = 0; idx < INIT_TABLE_SIZE; idx++) {
         ASSERT_FALSE(table->cache_map[idx]);
     }
     ASSERT_EQ(table->fp, nullptr);
@@ -66,7 +66,7 @@ TEST(testTable, testCacheMapMem) {
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
-        ASSERT_TRUE(table->len <= MAX_TABLE_SIZE);
+        ASSERT_TRUE(table->len <= INIT_TABLE_SIZE);
     }
     for (idx = 0; idx < insert_count; idx++) {
         ASSERT_TRUE(table->cache_map[idx]);
@@ -84,7 +84,7 @@ TEST(testTable, testCacheMap) {
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
-        ASSERT_TRUE(table->len <= MAX_TABLE_SIZE);
+        ASSERT_TRUE(table->len <= INIT_TABLE_SIZE);
     }
     for (idx = 0; idx < insert_count; idx++) {
         ASSERT_TRUE(table->cache_map[idx]);
@@ -137,7 +137,7 @@ TEST(testTable, testNewTableWithFile) {
     struct stat st;
 
     ASSERT_NE(table, nullptr);
-    ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
+    ASSERT_EQ(table->capacity, INIT_TABLE_SIZE);
     ASSERT_EQ(table->len, 0);
     ASSERT_NE(table->users, nullptr);
     ASSERT_NE(table->fp, nullptr);
@@ -161,7 +161,7 @@ TEST(testTable, testNewTableWithOldFile) {
 
     table = new_Table(file_name);
     ASSERT_NE(table, nullptr);
-    ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
+    ASSERT_EQ(table->capacity, INIT_TABLE_SIZE);
     ASSERT_EQ(table->len, 2);
     ASSERT_NE(table->users, nullptr);
     ASSERT_NE(table->fp, nullptr);
@@ -179,7 +179,7 @@ TEST(testTable, testAddUserSuc) {
     setup_sample_user(&user, 0);
 
     ASSERT_EQ(add_User(table, &user), 1);
-    ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
+    ASSERT_EQ(table->capacity, INIT_TABLE_SIZE);
     ASSERT_EQ(table->len, 1);
     check_sample_table_record_match(table, 1);
 }
@@ -197,15 +197,15 @@ TEST(testTable, testAddUserFull) {
     User_t user = { 1, "user", "user@example.com", 20 };
     size_t idx;
     int ret = 0;
-    for (idx = 0; idx < MAX_TABLE_SIZE; idx++) {
+    for (idx = 0; idx < INIT_TABLE_SIZE; idx++) {
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
-        ASSERT_TRUE(table->len <= MAX_TABLE_SIZE);
+        ASSERT_TRUE(table->len <= INIT_TABLE_SIZE);
     }
     ret = add_User(table, &user);
     ASSERT_NE(ret, 1);
-    ASSERT_TRUE(table->len <= MAX_TABLE_SIZE);
+    ASSERT_TRUE(table->len <= INIT_TABLE_SIZE);
 }
 
 TEST(testTable, testArchiveTable) {
@@ -269,7 +269,7 @@ TEST(testTable, testArchiveTableNULL) {
     Table_t *table = new_Table(NULL);
     int ret;
     ASSERT_NE(table, nullptr);
-    ASSERT_EQ(table->capacity, MAX_TABLE_SIZE);
+    ASSERT_EQ(table->capacity, INIT_TABLE_SIZE);
     ASSERT_EQ(table->len, 0);
     ASSERT_NE(table->users, nullptr);
     ASSERT_EQ(table->fp, nullptr);

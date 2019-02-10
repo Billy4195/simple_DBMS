@@ -6,12 +6,12 @@
 Table_t *new_Table(char *file_name) {
     Table_t *table = (Table_t*)malloc(sizeof(Table_t));
     memset((void*)table, 0, sizeof(Table_t));
-    table->capacity = MAX_TABLE_SIZE;
+    table->capacity = INIT_TABLE_SIZE;
     table->len = 0;
     table->users = (User_t*)malloc(
-                            sizeof(User_t) * MAX_TABLE_SIZE);
-    table->cache_map = (unsigned char*)malloc(sizeof(char)*MAX_TABLE_SIZE);
-    memset(table->cache_map, 0, sizeof(char)*MAX_TABLE_SIZE);
+                            sizeof(User_t) * INIT_TABLE_SIZE);
+    table->cache_map = (unsigned char*)malloc(sizeof(char)*INIT_TABLE_SIZE);
+    memset(table->cache_map, 0, sizeof(char)*INIT_TABLE_SIZE);
     table->fp = NULL;
     table->file_name = NULL;
     load_table(table, file_name);
@@ -21,7 +21,7 @@ Table_t *new_Table(char *file_name) {
 
 int add_User(Table_t *table, User_t *user) {
     size_t idx;
-    if (!table || !user || table->len == MAX_TABLE_SIZE) {
+    if (!table || !user || table->len == INIT_TABLE_SIZE) {
         return 0;
     }
     idx = table->len;
@@ -71,7 +71,7 @@ int load_table(Table_t *table, char *file_name) {
     }
     if (file_name != NULL) {
         table->len = 0;
-        memset(table->cache_map, 0, sizeof(char)*MAX_TABLE_SIZE);
+        memset(table->cache_map, 0, sizeof(char)*INIT_TABLE_SIZE);
         if (stat(file_name, &st) != 0) {
             //Create new file
             table->fp = fopen(file_name, "wb");
@@ -88,7 +88,7 @@ User_t* get_User(Table_t *table, size_t idx) {
     size_t archived_len;
     struct stat st;
     if (!table->cache_map[idx]) {
-        if (idx > MAX_TABLE_SIZE) {
+        if (idx > INIT_TABLE_SIZE) {
             goto error;
         }
         if (stat(table->file_name, &st) != 0) {

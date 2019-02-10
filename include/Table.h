@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "User.h"
 
-#define MAX_TABLE_SIZE 10000
+#define INIT_TABLE_SIZE 10000
 
 typedef struct Table {
     size_t capacity;
