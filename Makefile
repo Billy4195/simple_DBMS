@@ -13,7 +13,9 @@ CXX=g++
 TEST_SRC_DIR=test
 TEST_SRC=$(wildcard $(TEST_SRC_DIR)/*_test.c)
 TESTS=$(patsubst $(TEST_SRC_DIR)/%_test.c, $(TEST_SRC_DIR)/%_test,$(TEST_SRC))
-TEST_FLAGS=-lgtest -pthread -std=c++11
+TEST_FLAGS=-lgtest -pthread -std=c++11 -I$(TEST_SRC_DIR)/include
+TEST_UTIL=$(wildcard $(TEST_SRC_DIR)/*_Util.c)
+TEST_UTIL_INCLUE=$(wildcard $(TEST_SRC_DIR)/include/*.h)
 
 all: $(TARGET)
 
@@ -27,8 +29,8 @@ check: $(TESTS)
 	-./test/all_test
 	find test/ -name "*.db" -delete
 
-$(TESTS): $(TEST_SRC) $(DEP_SRC) $(DEPS)
-	$(CXX) -o $@ $(TEST_SRC) $(DEP_SRC) $(CFLAGS) $(TEST_FLAGS)
+$(TESTS): $(TEST_SRC) $(DEP_SRC) $(DEPS) $(TEST_UTIL) $(TEST_UTIL_INCLUE)
+	$(CXX) -o $@ $(TEST_SRC) $(DEP_SRC) $(TEST_UTIL) $(CFLAGS) $(TEST_FLAGS)
 
 .PHONY: clean check
 
