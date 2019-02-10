@@ -217,7 +217,10 @@ TEST(testTable, testArchiveTable) {
     size_t idx;
     int ret;
 
-    ASSERT_NE(stat(file_name, &st), 0);
+    if (stat(file_name, &st) == 0) {
+        remove(file_name);
+        ASSERT_NE(stat(file_name, &st), 0);
+    }
 
     table = new_Table(file_name);
     for (idx = 0; idx < insert_count; idx++) {
@@ -303,7 +306,10 @@ TEST(testTable, testGetUserBeforeArchive) {
     size_t idx;
     int ret;
 
-    EXPECT_NE(stat(file_name, &st), 0);
+    if (stat(file_name, &st) == 0) {
+        remove(file_name);
+        ASSERT_NE(stat(file_name, &st), 0);
+    }
 
     table = new_Table(file_name);
     for (idx = 0; idx < 2; idx++) {
