@@ -12,7 +12,7 @@ DEP_OBJ=$(filter-out src/$(TARGET).o, $(OBJ))
 CXX=g++
 TEST_SRC_DIR=test
 TEST_SRC=$(wildcard $(TEST_SRC_DIR)/*_test.c)
-TESTS=$(patsubst $(TEST_SRC_DIR)/%_test.c, $(TEST_SRC_DIR)/%_test,$(TEST_SRC))
+TEST=test/all_test
 TEST_FLAGS=-lgtest -pthread -std=c++11 -I$(TEST_SRC_DIR)/include
 TEST_UTIL=$(wildcard $(TEST_SRC_DIR)/*_Util.c)
 TEST_UTIL_INCLUE=$(wildcard $(TEST_SRC_DIR)/include/*.h)
@@ -25,14 +25,14 @@ all: $(TARGET)
 shell: $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
-check: $(TESTS)
-	-./test/all_test
+check: $(TEST)
+	-$(TEST)
 	find test/ -name "*.db" -delete
 
-$(TESTS): $(TEST_SRC) $(DEP_SRC) $(DEPS) $(TEST_UTIL) $(TEST_UTIL_INCLUE)
+$(TEST): $(TEST_SRC) $(DEP_SRC) $(DEPS) $(TEST_UTIL) $(TEST_UTIL_INCLUE)
 	$(CXX) -o $@ $(TEST_SRC) $(DEP_SRC) $(TEST_UTIL) $(CFLAGS) $(TEST_FLAGS)
 
 .PHONY: clean check
 
 clean:
-	rm $(TARGET) $(OBJ) $(TESTS) $(wildcard test/*.db)
+	rm $(TARGET) $(OBJ) $(TEST) $(wildcard test/*.db)
