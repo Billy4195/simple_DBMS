@@ -66,7 +66,7 @@ TEST(testTable, testCacheMapMem) {
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
-        ASSERT_TRUE(table->len <= INIT_TABLE_SIZE);
+        ASSERT_TRUE(table->len <= table->capacity);
     }
     for (idx = 0; idx < insert_count; idx++) {
         ASSERT_TRUE(table->cache_map[idx]);
@@ -84,7 +84,7 @@ TEST(testTable, testCacheMap) {
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
-        ASSERT_TRUE(table->len <= INIT_TABLE_SIZE);
+        ASSERT_TRUE(table->len <= table->capacity);
     }
     for (idx = 0; idx < insert_count; idx++) {
         ASSERT_TRUE(table->cache_map[idx]);
@@ -171,6 +171,25 @@ TEST(testTable, testNewTableWithOldFile) {
     ASSERT_NE(stat(file_name, &st), 0);
 }
 
+TEST(testTable, testNewTableWithOldFileLarge) {
+    char file_name[] = "./test/test.db";
+    Table_t *table;
+    struct stat st;
+
+    setup_sample_db_file(file_name, INIT_TABLE_SIZE+2);
+
+    table = new_Table(file_name);
+    ASSERT_NE(table, nullptr);
+    ASSERT_EQ(table->len, INIT_TABLE_SIZE+2);
+    ASSERT_TRUE(table->len <= table->capacity);
+    ASSERT_NE(table->users, nullptr);
+    ASSERT_NE(table->fp, nullptr);
+    ASSERT_STREQ(table->file_name, file_name);
+    fclose(table->fp);
+    remove(file_name);
+    ASSERT_NE(stat(file_name, &st), 0);
+}
+
 TEST(testTable, testAddUserSuc) {
     Table_t *table = new_Table(NULL);
     ASSERT_NE(table, nullptr);
@@ -179,7 +198,7 @@ TEST(testTable, testAddUserSuc) {
     setup_sample_user(&user, 0);
 
     ASSERT_EQ(add_User(table, &user), 1);
-    ASSERT_EQ(table->capacity, INIT_TABLE_SIZE);
+    ASSERT_TRUE(table->len <= table->capacity);
     ASSERT_EQ(table->len, 1);
     check_sample_table_record_match(table, 1);
 }
@@ -192,20 +211,17 @@ TEST(testTable, testAddUserFail) {
     ASSERT_NE(add_User(NULL, &user), 1);
 }
 
-TEST(testTable, testAddUserFull) {
+TEST(testTable, testAddUserNoFull) {
     Table_t *table = new_Table(NULL);
     User_t user = { 1, "user", "user@example.com", 20 };
     size_t idx;
     int ret = 0;
-    for (idx = 0; idx < INIT_TABLE_SIZE; idx++) {
+    for (idx = 0; idx < INIT_TABLE_SIZE*2; idx++) {
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
-        ASSERT_TRUE(table->len <= INIT_TABLE_SIZE);
+        ASSERT_TRUE(table->len <= table->capacity);
     }
-    ret = add_User(table, &user);
-    ASSERT_NE(ret, 1);
-    ASSERT_TRUE(table->len <= INIT_TABLE_SIZE);
 }
 
 TEST(testTable, testArchiveTable) {
@@ -403,6 +419,33 @@ TEST(testTable, testLoadTable) {
     ASSERT_NE(table->fp, nullptr);
     ASSERT_STREQ(table->file_name, file_name);
     ASSERT_EQ(table->len, 2);
+    for (idx = 0; idx < insert_count; idx++) {
+        ASSERT_FALSE(table->cache_map[idx]);
+    }
+}
+
+TEST(testTable, testLoadTableLarge) {
+    char file_name[] = "./test/test.db";
+    Table_t *table;
+    int idx, ret;
+    User_t sample_user;
+    const int insert_count = 50;
+
+    setup_sample_db_file(file_name, INIT_TABLE_SIZE+insert_count);
+
+    table = new_Table(NULL);
+    for (idx = 0; idx < insert_count; idx++) {
+        setup_sample_user(&sample_user, idx);
+        add_User(table, &sample_user);
+    }
+
+    ret = load_table(table, file_name);
+
+    ASSERT_EQ(ret, INIT_TABLE_SIZE+insert_count);
+    ASSERT_NE(table->fp, nullptr);
+    ASSERT_STREQ(table->file_name, file_name);
+    ASSERT_EQ(table->len, INIT_TABLE_SIZE+insert_count);
+    ASSERT_TRUE(table->len <= table->capacity);
     for (idx = 0; idx < insert_count; idx++) {
         ASSERT_FALSE(table->cache_map[idx]);
     }
