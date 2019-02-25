@@ -117,7 +117,7 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
 }
 
 void print_help_msg() {
-    const char msg[] = "# Support Command\n"
+    const char msg[] = "# Supported Commands\n"
     "\n"
     "## Built-in Commands\n"
     "\n"
