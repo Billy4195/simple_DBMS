@@ -1,0 +1,11 @@
+# For python cache
+**/*__pycache__
+
+# For c object file
+**/*.o
+
+# For output binary
+shell
+
+# For system test output
+test/system/output/*
