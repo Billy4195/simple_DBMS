@@ -3,6 +3,10 @@
 #include <sys/stat.h>
 #include "Table.h"
 
+///
+/// Allocate a Table_t struct, then initialize some attributes, and
+/// load table if the `file_name` is given
+///
 Table_t *new_Table(char *file_name) {
     Table_t *table = (Table_t*)malloc(sizeof(Table_t));
     memset((void*)table, 0, sizeof(Table_t));
@@ -18,7 +22,12 @@ Table_t *new_Table(char *file_name) {
     return table;
 }
 
-
+///
+/// Add the `User_t` data to the given table
+/// If the table is full, it will allocate new space to store more
+/// user data
+/// return 1 when the data successfully add to table
+///
 int add_User(Table_t *table, User_t *user) {
     size_t idx;
     if (!table || !user) {
@@ -47,9 +56,9 @@ int add_User(Table_t *table, User_t *user) {
     return 1;
 }
 
-/*
- * Return value is the archived table len
- */
+///
+/// Return value is the archived table len
+///
 int archive_table(Table_t *table) {
     size_t archived_len;
     struct stat st;
@@ -73,10 +82,11 @@ int archive_table(Table_t *table) {
     return table->len;
 }
 
-/*
- * Loading the db file will overwrite the existed records in table, only if the ``file_name`` is NULL
- * Return value: the number of records in the db file
- */
+///
+/// Loading the db file will overwrite the existed records in table,
+/// only if the ``file_name`` is NULL
+/// Return: the number of records in the db file
+///
 int load_table(Table_t *table, char *file_name) {
     size_t archived_len;
     struct stat st;
@@ -114,6 +124,9 @@ int load_table(Table_t *table, char *file_name) {
     return table->len;
 }
 
+///
+/// Return the user in table by the given index
+///
 User_t* get_User(Table_t *table, size_t idx) {
     size_t archived_len;
     struct stat st;
