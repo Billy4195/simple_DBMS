@@ -57,3 +57,14 @@ execution command.
 
 #### Usage:
 `$ ./shell <DB file>`
+
+## Project Layout
+    ├─ include/           Header files
+    ├─ src/               Source files
+    │  ├─ shell.c         Entry point, which contains main()
+    │  └─ Util.c          Some utility functions
+    ├─ test/              Unit tests & system tests
+    │  ├─ include/        Test header files
+    │  ├─ system/         System tests
+    │  └─ *.c             Unit tests source file
+    └─ Makefile           Makefile for make
