@@ -3,6 +3,10 @@
 #include "User.h"
 #include "Command.h"
 
+///
+/// Allocate new space for User_t
+/// The caller should free the allocated space
+///
 User_t* new_User() {
     User_t *new_user = (User_t*)malloc(sizeof(User_t));
     new_user->id = 0;
@@ -12,10 +16,9 @@ User_t* new_User() {
     return new_user;
 }
 
-/*
- * Allocate new space for User_t
- * The caller should free the return space
- */
+///
+/// Transform from the input cmd to the User_t
+///
 User_t* command_to_User(Command_t *cmd) {
     User_t *user = new_User();
     if (!user || !cmd) {
