@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include "InputBuffer.h"
 
+///
+/// Allocate InputBuffer_t and initialize some attributes
+/// Return: ptr of InputBuffer_t
+///
 InputBuffer_t* new_InputBuffer() {
     InputBuffer_t *input_buffer = (InputBuffer_t*) malloc(sizeof(InputBuffer_t));
     input_buffer->buffer = NULL;
@@ -10,9 +14,10 @@ InputBuffer_t* new_InputBuffer() {
     return input_buffer;
 }
 
-/*
- * TODO: accept different input source
- */
+///
+/// Read the input from stdin, then store into InputBuffer_t
+/// TODO: accept different input source
+///
 void read_input(InputBuffer_t *input_buffer) {
     ssize_t bytes_read = getline(&(input_buffer->buffer), &(input_buffer->buffer_len), stdin);
     ssize_t input_len;
@@ -31,6 +36,9 @@ void read_input(InputBuffer_t *input_buffer) {
     input_buffer->input_len = input_len;
 }
 
+///
+/// Free the allocated buffer to store input string
+///
 void clean_InputBuffer(InputBuffer_t *input_buffer) {
     free(input_buffer->buffer);
     input_buffer->buffer = NULL;
