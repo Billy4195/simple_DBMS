@@ -9,26 +9,36 @@
 #include "Command.h"
 #include "Table.h"
 
+///
+/// Allocate State_t and initialize some attributes
+/// Return: ptr of new State_t
+///
 State_t* new_State() {
     State_t *state = (State_t*)malloc(sizeof(State_t));
     state->saved_stdout = -1;
     return state;
 }
 
+///
+/// Print shell prompt
+///
 void print_prompt(State_t *state) {
     if (state->saved_stdout == -1) {
         printf("db > ");
     }
 }
 
+///
+/// Print the user in the specific format
+///
 void print_user(User_t *user) {
     printf("(%d, %s, %s, %d)\n", user->id, user->name, user->email, user->age);
 }
 
-/*
- * This function received an output argument
- * Return: category of the command
- */
+///
+/// This function received an output argument
+/// Return: category of the command
+///
 int parse_input(char *input, Command_t *cmd) {
     char *token;
     int idx;
@@ -45,6 +55,10 @@ int parse_input(char *input, Command_t *cmd) {
     return cmd->type;
 }
 
+///
+/// Handle built-in commands
+/// Return: command type
+///
 void handle_builtin_cmd(Table_t *table, Command_t *cmd, State_t *state) {
     if (!strncmp(cmd->args[0], ".exit", 5)) {
         archive_table(table);
@@ -73,6 +87,10 @@ void handle_builtin_cmd(Table_t *table, Command_t *cmd, State_t *state) {
     }
 }
 
+///
+/// Handle query type commands
+/// Return: command type
+///
 int handle_query_cmd(Table_t *table, Command_t *cmd) {
     if (!strncmp(cmd->args[0], "insert", 6)) {
         handle_insert_cmd(table, cmd);
@@ -85,11 +103,11 @@ int handle_query_cmd(Table_t *table, Command_t *cmd) {
     }
 }
 
-/*
- * The return value is the number of rows insert into table
- * If the insert operation success, then change the input arg
- * `cmd->type` to INSERT_CMD
- */
+///
+/// The return value is the number of rows insert into table
+/// If the insert operation success, then change the input arg
+/// `cmd->type` to INSERT_CMD
+///
 int handle_insert_cmd(Table_t *table, Command_t *cmd) {
     int ret = 0;
     User_t *user = command_to_User(cmd);
@@ -102,11 +120,11 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
     return ret;
 }
 
-/*
- * The return value is the number of rows select from table
- * If the select operation success, then change the input arg
- * `cmd->type` to SELECT_CMD
- */
+///
+/// The return value is the number of rows select from table
+/// If the select operation success, then change the input arg
+/// `cmd->type` to SELECT_CMD
+///
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
     size_t idx;
     for (idx = 0; idx < table->len; idx++) {
@@ -116,6 +134,9 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
     return table->len;
 }
 
+///
+/// Show the help messages
+///
 void print_help_msg() {
     const char msg[] = "# Supported Commands\n"
     "\n"
