@@ -21,6 +21,10 @@ Command_t* new_Command() {
     return cmd;
 }
 
+///
+/// Add argument to Command_t
+/// Reallocate buffer if it is full.
+///
 int add_Arg(Command_t *cmd, const char *arg) {
     char **new_buf;
     if (cmd->args == NULL) {
@@ -53,6 +57,9 @@ error:
     return 1;
 }
 
+///
+/// Free the allocated arguments, but without free the argument buffer
+///
 void cleanup_Command(Command_t *cmd) {
     size_t idx;
     for (idx = 0; idx < cmd->args_cap; idx++) {
