@@ -35,4 +35,5 @@ $(TEST): $(TEST_SRC) $(DEP_SRC) $(DEPS) $(TEST_UTIL) $(TEST_UTIL_INCLUE)
 .PHONY: clean check
 
 clean:
-	rm $(TARGET) $(OBJ) $(TEST) $(wildcard test/*.db)
+	-rm $(TARGET) $(OBJ) $(TEST) $(wildcard test/*.db)
+	rm -rf test/system/output/*
