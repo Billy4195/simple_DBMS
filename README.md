@@ -8,10 +8,17 @@ This project is a simple DBMS implemented using C, as the education material of 
 * gcc >= 5.4.0
 * g++ >= 5.4.0
 * gtest >= 1.8.1
+* python >= 3.6.0
 
 ## Unit test
 
 `$ make check`
+
+## System test
+
+`$ python3 test/system/system_test.py ./shell [test_case..]`
+
+> if no test_cases is specified, it will run all system tests by default
 
 ## Compile
 
