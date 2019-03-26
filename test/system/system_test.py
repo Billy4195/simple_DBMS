@@ -23,16 +23,14 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path):
         if name.startswith("t") and name.endswith(".txt"):
             case_files.append(name)
 
-    for case in case_files:
+    print("Starting test suite ``{suite}``".format(suite=suite_name))
+    for case in sorted(case_files):
         if suite:
             suite.setUp()
 
-        print("Exe case:", case)
         case_path = os.path.join(suite_path, case)
         out_path = os.path.join(suite_out_path, case)
         ans_path = os.path.join(suite_ans_path, case)
-        print("output file: ", out_path)
-        print("answer file: ", ans_path)
         with open(case_path) as fp:
             content = fp.readlines()
         content.insert(0, ".output {out_path}\n".format(out_path=out_path))
@@ -48,8 +46,14 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path):
 
         is_result_match = filecmp.cmp(out_path, ans_path)
         if is_result_match:
+            print("The test file {case} passed".format(case=case))
             correct_count += 1
+        else:
+            print("The test file {case} failed".format(case=case))
 
+    print("The test suite ``{}`` total passed {}/{}".format(suite_name,
+            correct_count, len(case_files)))
+    print()
     return correct_count, len(case_files)
 
 def main():
@@ -78,7 +82,6 @@ def main():
             setup_output_dir(suite_out_path)
             ret = execute_testsuite(sys.argv[1], suite_path, suite_out_path, suite_ans_path)
             correct_count, total_count = ret
-            print(correct_count, total_count)
 
 if __name__ == "__main__":
     main()
