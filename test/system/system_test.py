@@ -3,6 +3,7 @@ import os
 import importlib
 import subprocess
 import filecmp
+import argparse
 
 def setup_output_dir(output_dir):
     if not os.path.exists(output_dir):
@@ -57,20 +58,23 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path):
     return correct_count, len(case_files)
 
 def main():
-    if len(sys.argv) == 2:
-        target = "all"  
-    else:
-        target = sys.argv[2:]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("shell", help="The path of the compiled shell")
+    parser.add_argument("test_case", help="The test case to be run, default: all", nargs="*", default="all")
+    args = parser.parse_args()
+
+    if not isinstance(args.test_case, list):
+        args.test_case = "all"
     
     file_path = os.path.dirname(__file__)
     testcase_path = os.path.join(file_path, "testcases")
     output_path = os.path.join(file_path, "output")
     answer_path = os.path.join(file_path, "answer")
 
-    if target == "all":
-        target = os.listdir(testcase_path)
+    if args.test_case == "all":
+        args.test_case = os.listdir(testcase_path)
     
-    for test_suite in target:
+    for test_suite in args.test_case:
         if test_suite == "__pycache__":
             continue
 
