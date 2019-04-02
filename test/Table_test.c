@@ -26,6 +26,7 @@ TEST(testTable, testCacheMapMem) {
     int ret = 0;
     const size_t insert_count = 50;
     for (idx = 0; idx < insert_count; idx++) {
+        setup_sample_user(&user, idx);
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
@@ -52,6 +53,7 @@ TEST(testTable, testCacheMap) {
     table = new_Table(file_name);
 
     for (idx = 0; idx < insert_count; idx++) {
+        setup_sample_user(&user, idx);
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
@@ -80,6 +82,7 @@ TEST(testTable, testCacheMapWithArchiveFile) {
     ASSERT_FALSE(table->cache_map[1]);
 
     for (idx = 0; idx < insert_count; idx++) {
+        setup_sample_user(&user, idx+2);
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
     }
@@ -188,6 +191,7 @@ TEST(testTable, testAddUserNoFull) {
     size_t idx;
     int ret = 0;
     for (idx = 0; idx < INIT_TABLE_SIZE*2; idx++) {
+        setup_sample_user(&user, idx);
         ret = add_User(table, &user);
         ASSERT_EQ(ret, 1);
         ASSERT_EQ(table->len, idx+1);
@@ -211,6 +215,7 @@ TEST(testTable, testArchiveTable) {
 
     table = new_Table(file_name);
     for (idx = 0; idx < insert_count; idx++) {
+        setup_sample_user(&user, idx);
         ret = add_User(table, &user);
         EXPECT_EQ(ret, 1);
         EXPECT_EQ(table->len, idx+1);
@@ -240,6 +245,7 @@ TEST(testTable, testArchiveOldTable) {
 
     table = new_Table(file_name);
     for (idx = 0; idx < insert_count; idx++) {
+        setup_sample_user(&user, idx+2);
         ret = add_User(table, &user);
         EXPECT_EQ(ret, 1);
     }
