@@ -1,8 +1,8 @@
 insert 1 user1 user1@example.com 20
 insert 2 user1 user1@example.com 20
-select offset 1
+select * from table offset 1
 insert 3 user1 user1@example.com 20
 insert 4 user1 user1@example.com 20
-select
-select offset 2
+select * from table
+select * from table offset 2
 .exit

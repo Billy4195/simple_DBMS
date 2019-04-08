@@ -2,7 +2,7 @@ insert 1 user1 user1@example.com 20
 insert 2 user2 user2@example.com 21
 insert 3 user3 user3@example.com 22
 insert 4 user4 user4@example.com 23
-select limit 2
+select * from table limit 2
 insert 5 user5 user5@example.com 24
-select
+select * from table
 .exit
