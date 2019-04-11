@@ -30,8 +30,16 @@ Table_t *new_Table(char *file_name) {
 ///
 int add_User(Table_t *table, User_t *user) {
     size_t idx;
+    User_t *usr_ptr;
     if (!table || !user) {
         return 0;
+    }
+    // Check id doesn't exist in the table
+    for (idx = 0; idx < table->len; idx++) {
+        usr_ptr = get_User(table, idx);
+        if (usr_ptr->id == user->id) {
+            return 0;
+        }
     }
     if (table->len == table->capacity) {
         User_t *new_user_buf = (User_t*)malloc(sizeof(User_t)*(table->len+EXT_LEN));
