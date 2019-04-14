@@ -60,6 +60,11 @@ TEST(testTable, testCacheMap) {
     for (idx = 0; idx < insert_count; idx++) {
         ASSERT_TRUE(table->cache_map[idx]);
     }
+    if (table->fp) {
+        fclose(table->fp);
+    }
+    remove(file_name);
+    ASSERT_NE(stat(file_name, &st), 0);
 }
 
 TEST(testTable, testCacheMapWithArchiveFile) {
