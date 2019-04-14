@@ -19,8 +19,8 @@ TEST(testUtil, testHandleQueryCmdInsert) {
 
 TEST(testUtil, testHandleQueryCmdSelect) {
     Table_t *table = new_Table(NULL);
-    char const *args[] = { "select" };
-    Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
+    char const *args[] = { "select", "*", "from", "table"};
+    Command_t cmd = { QUERY_CMD, (char**)args, 4, 4 };
     int ret;
     ret = handle_query_cmd(table, &cmd);
     ASSERT_EQ(ret, SELECT_CMD);
@@ -49,8 +49,8 @@ TEST(testUtil, testHandleInsertCmd) {
 
 TEST(testUtil, testHandleSelectCmdEmpty) {
     Table_t *table = new_Table(NULL);
-    char const *args[] = { "select" };
-    Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
+    char const *args[] = { "select", "*", "from", "table"};
+    Command_t cmd = { QUERY_CMD, (char**)args, 4, 4 };
     int ret;
 
     ret = handle_select_cmd(table, &cmd);
@@ -59,8 +59,8 @@ TEST(testUtil, testHandleSelectCmdEmpty) {
 
 TEST(testUtil, testHandleSelectCmd) {
     Table_t *table = new_Table(NULL);
-    char const *args[] = { "select" };
-    Command_t cmd = { QUERY_CMD, (char**)args, 1, 1 };
+    char const *args[] = { "select", "*", "from", "table"};
+    Command_t cmd = { QUERY_CMD, (char**)args, 4, 4 };
     User_t user = { 1, "user", "user@example.com", 20 };
     int ret;
     size_t idx;
