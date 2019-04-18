@@ -36,6 +36,26 @@ void print_user(User_t *user) {
 }
 
 ///
+/// Print the users for given offset and limit restriction
+///
+void print_users(Table_t *table, int *idxList, size_t idxListLen, int offset, int limit) {
+    size_t idx;
+    if (offset == -1) {
+        offset = 0;
+    }
+
+    if (idxList) {
+        for (idx = offset; idx < idxListLen; idx++) {
+            print_user(get_User(table, idxList[idx]));
+        }
+    } else {
+        for (idx = offset; idx < table->len; idx++) {
+            print_user(get_User(table, idx));
+        }
+    }
+}
+
+///
 /// This function received an output argument
 /// Return: category of the command
 ///
@@ -126,10 +146,9 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 /// `cmd->type` to SELECT_CMD
 ///
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
-    size_t idx;
-    for (idx = 0; idx < table->len; idx++) {
-        print_user(get_User(table, idx));
-    }
+    int offset = -1;
+    int limit = -1;
+    print_users(table, NULL, 0, offset, limit);
     cmd->type = SELECT_CMD;
     return table->len;
 }
