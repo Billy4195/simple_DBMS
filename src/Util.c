@@ -46,10 +46,16 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, int offset, in
 
     if (idxList) {
         for (idx = offset; idx < idxListLen; idx++) {
+            if (limit != -1 && (idx - offset) >= limit) {
+                break;
+            }
             print_user(get_User(table, idxList[idx]));
         }
     } else {
         for (idx = offset; idx < table->len; idx++) {
+            if (limit != -1 && (idx - offset) >= limit) {
+                break;
+            }
             print_user(get_User(table, idx));
         }
     }
@@ -153,6 +159,9 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
         if (!strncmp(cmd->args[arg_idx], "offset", 6) && arg_idx+1 < cmd->args_len) {
             arg_idx += 1;
             offset = atoi(cmd->args[arg_idx]);
+        } else if (!strncmp(cmd->args[arg_idx], "limit", 5) && arg_idx+1 < cmd->args_len) {
+            arg_idx += 1;
+            limit = atoi(cmd->args[arg_idx]);
         }
     }
     print_users(table, NULL, 0, offset, limit);
