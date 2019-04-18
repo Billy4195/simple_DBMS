@@ -146,8 +146,15 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 /// `cmd->type` to SELECT_CMD
 ///
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
+    size_t arg_idx;
     int offset = -1;
     int limit = -1;
+    for (arg_idx = 0; arg_idx < cmd->args_len; arg_idx++) {
+        if (!strncmp(cmd->args[arg_idx], "offset", 6) && arg_idx+1 < cmd->args_len) {
+            arg_idx += 1;
+            offset = atoi(cmd->args[arg_idx]);
+        }
+    }
     print_users(table, NULL, 0, offset, limit);
     cmd->type = SELECT_CMD;
     return table->len;
