@@ -38,3 +38,17 @@ TEST(testCommand, testAddArg) {
     }
 }
 
+TEST(testCommand, testAddSelectArg) {
+    Command_t *cmd = new_Command();
+    cmd->type = SELECT_CMD;
+    char const *fields[] = { "*", "id", "email", "age", \
+                             "name", "email" };
+    size_t fields_len = 6;
+    size_t idx;
+    for (idx = 0; idx < fields_len; idx++) {
+        add_select_field(cmd, fields[idx]);
+        ASSERT_EQ(cmd->cmd_args.sel_args.fields_len, idx+1);
+        ASSERT_STREQ(cmd->cmd_args.sel_args.fields[idx], fields[idx]);
+    }
+}
+

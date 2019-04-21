@@ -68,7 +68,7 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, int offset, in
 int parse_input(char *input, Command_t *cmd) {
     char *token;
     int idx;
-    token = strtok(input, " \n");
+    token = strtok(input, " ,\n");
     for (idx = 0; strlen(cmd_list[idx].name) != 0; idx++) {
         if (!strncmp(token, cmd_list[idx].name, cmd_list[idx].len)) {
             cmd->type = cmd_list[idx].type;
@@ -76,7 +76,7 @@ int parse_input(char *input, Command_t *cmd) {
     }
     while (token != NULL) {
         add_Arg(cmd, token);
-        token = strtok(NULL, " \n");
+        token = strtok(NULL, " ,\n");
     }
     return cmd->type;
 }
@@ -155,6 +155,9 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
     size_t arg_idx;
     int offset = -1;
     int limit = -1;
+
+    cmd->type = SELECT_CMD;
+
     for (arg_idx = 0; arg_idx < cmd->args_len; arg_idx++) {
         if (!strncmp(cmd->args[arg_idx], "offset", 6) && arg_idx+1 < cmd->args_len) {
             arg_idx += 1;
@@ -165,7 +168,6 @@ int handle_select_cmd(Table_t *table, Command_t *cmd) {
         }
     }
     print_users(table, NULL, 0, offset, limit);
-    cmd->type = SELECT_CMD;
     return table->len;
 }
 
