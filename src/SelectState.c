@@ -4,6 +4,10 @@
 #include "SelectState.h"
 
 void field_state_handler(Command_t *cmd, size_t arg_idx) {
+    cmd->cmd_args.sel_args.fields = NULL;
+    cmd->cmd_args.sel_args.fields_len = 0;
+    cmd->cmd_args.sel_args.limit = -1;
+    cmd->cmd_args.sel_args.offset = -1;
     while(arg_idx < cmd->args_len) {
         if (!strncmp(cmd->args[arg_idx], "*", 1)) {
             add_select_field(cmd, cmd->args[arg_idx]);

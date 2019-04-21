@@ -8,6 +8,7 @@
 #include "Util.h"
 #include "Command.h"
 #include "Table.h"
+#include "SelectState.h"
 
 ///
 /// Allocate State_t and initialize some attributes
@@ -153,21 +154,11 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 ///
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
     size_t arg_idx;
-    int offset = -1;
-    int limit = -1;
 
     cmd->type = SELECT_CMD;
+    field_state_handler(cmd, 1);
 
-    for (arg_idx = 0; arg_idx < cmd->args_len; arg_idx++) {
-        if (!strncmp(cmd->args[arg_idx], "offset", 6) && arg_idx+1 < cmd->args_len) {
-            arg_idx += 1;
-            offset = atoi(cmd->args[arg_idx]);
-        } else if (!strncmp(cmd->args[arg_idx], "limit", 5) && arg_idx+1 < cmd->args_len) {
-            arg_idx += 1;
-            limit = atoi(cmd->args[arg_idx]);
-        }
-    }
-    print_users(table, NULL, 0, offset, limit);
+    print_users(table, NULL, 0, cmd->cmd_args.sel_args.offset, cmd->cmd_args.sel_args.limit);
     return table->len;
 }
 
