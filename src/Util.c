@@ -32,15 +32,37 @@ void print_prompt(State_t *state) {
 ///
 /// Print the user in the specific format
 ///
-void print_user(User_t *user) {
-    printf("(%d, %s, %s, %d)\n", user->id, user->name, user->email, user->age);
+void print_user(User_t *user, SelectArgs_t *sel_args) {
+    size_t idx;
+    printf("(");
+    for (idx = 0; idx < sel_args->fields_len; idx++) {
+        if (!strncmp(sel_args->fields[idx], "*", 1)) {
+            printf("%d, %s, %s, %d", user->id, user->name, user->email, user->age);
+        } else {
+            if (idx > 0) printf(", ");
+
+            if (!strncmp(sel_args->fields[idx], "id", 2)) {
+                printf("%d", user->id);
+            } else if (!strncmp(sel_args->fields[idx], "name", 4)) {
+                printf("%s", user->name);
+            } else if (!strncmp(sel_args->fields[idx], "email", 5)) {
+                printf("%s", user->email);
+            } else if (!strncmp(sel_args->fields[idx], "age", 3)) {
+                printf("%s", user->age);
+            }
+        }
+    }
+    printf(")\n");
 }
 
 ///
 /// Print the users for given offset and limit restriction
 ///
-void print_users(Table_t *table, int *idxList, size_t idxListLen, int offset, int limit) {
+void print_users(Table_t *table, int *idxList, size_t idxListLen, Command_t *cmd) {
     size_t idx;
+    int limit = cmd->cmd_args.sel_args.limit;
+    int offset = cmd->cmd_args.sel_args.offset;
+
     if (offset == -1) {
         offset = 0;
     }
@@ -50,14 +72,14 @@ void print_users(Table_t *table, int *idxList, size_t idxListLen, int offset, in
             if (limit != -1 && (idx - offset) >= limit) {
                 break;
             }
-            print_user(get_User(table, idxList[idx]));
+            print_user(get_User(table, idxList[idx]), &(cmd->cmd_args.sel_args));
         }
     } else {
         for (idx = offset; idx < table->len; idx++) {
             if (limit != -1 && (idx - offset) >= limit) {
                 break;
             }
-            print_user(get_User(table, idx));
+            print_user(get_User(table, idx), &(cmd->cmd_args.sel_args));
         }
     }
 }
@@ -153,12 +175,10 @@ int handle_insert_cmd(Table_t *table, Command_t *cmd) {
 /// `cmd->type` to SELECT_CMD
 ///
 int handle_select_cmd(Table_t *table, Command_t *cmd) {
-    size_t arg_idx;
-
     cmd->type = SELECT_CMD;
     field_state_handler(cmd, 1);
 
-    print_users(table, NULL, 0, cmd->cmd_args.sel_args.offset, cmd->cmd_args.sel_args.limit);
+    print_users(table, NULL, 0, cmd);
     return table->len;
 }
 
