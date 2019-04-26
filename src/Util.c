@@ -48,7 +48,7 @@ void print_user(User_t *user, SelectArgs_t *sel_args) {
             } else if (!strncmp(sel_args->fields[idx], "email", 5)) {
                 printf("%s", user->email);
             } else if (!strncmp(sel_args->fields[idx], "age", 3)) {
-                printf("%s", user->age);
+                printf("%d", user->age);
             }
         }
     }
