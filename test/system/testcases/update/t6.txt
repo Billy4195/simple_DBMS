@@ -1,4 +1,4 @@
-update table set email="user1@example.xyz"
+update table set email = "user1@example.xyz"
 insert 1 "user1" "user1@example.com" 10
 select * from table
 .exit

@@ -1,6 +1,6 @@
 insert 1 "user1" "user1@example.com" 20
 insert 2 "user2" "user2@example.com" 23
-delete from table where age<21
+delete from table where age < 21
 insert 1 "user3" "user3@example.com" 24
 select * from table
 delete from table
