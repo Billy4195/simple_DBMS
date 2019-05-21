@@ -1,0 +1,6 @@
+insert 1 "user1" "user1@example.com" 10
+insert 2 "user2" "user2@example.com" 20
+insert 3 "user3" "user3@example.com" 30
+insert 4 "user4" "user4@example.com" 40
+select * from table where age != 10 offset 1 limit 1
+.exit
