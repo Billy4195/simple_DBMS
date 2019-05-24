@@ -50,7 +50,11 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path):
         if suite:
             suite.tearDown()
 
-        is_result_match = filecmp.cmp(out_path, ans_path)
+        if os.path.isfile(out_path):
+            is_result_match = filecmp.cmp(out_path, ans_path)
+        else:
+            is_result_match = False
+
         if is_result_match:
             print("The test file {case} passed".format(case=case))
             correct_count += 1
