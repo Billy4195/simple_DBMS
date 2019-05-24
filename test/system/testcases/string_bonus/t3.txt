@@ -1,0 +1,5 @@
+insert 1 "user1" "user1@example.com" 10
+insert 2 "user2" "user2@example.com" 20
+update table set email= "user1@example.xyz" where name="user1"
+select * from table
+.exit
