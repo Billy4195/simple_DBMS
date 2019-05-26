@@ -9,3 +9,4 @@ shell
 
 # For system test output
 test/system/output/*
+test/system/**/large/*
