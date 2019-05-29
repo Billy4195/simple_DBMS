@@ -748,5 +748,5 @@ insert into like 20974 18882
 insert into like 7578 8468
 insert into like 12039 9888
 insert into like 17434 3386
-select count(*) from user join like on user.id = like.id2 where user.name = "Irina1"
+select count(*) from user join like on id = id2 where name = "Irina1"
 .exit
