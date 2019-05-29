@@ -748,5 +748,5 @@ insert into like 3949 8676
 insert into like 17974 18244
 insert into like 23774 10830
 insert into like 248 5286
-select count(*) from user join like on user.id = like.id1 where age < 53
+select count(*) from user join like on id = id1 where age < 53
 .exit

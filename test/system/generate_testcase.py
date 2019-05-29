@@ -101,7 +101,7 @@ def main():
 
     user_insert = insert_table(user_table, 'user',['id', 'name', 'email', 'age'])
     like_insert = insert_table(like_table, 'like',['id1', 'id2'])
-    
+   
     #---------------------------------------------------------------#
     # t1 -- select id, name from user offset <offset num> limit <limit num> 
     #---------------------------------------------------------------#
@@ -159,7 +159,7 @@ def main():
         f.write('(%d)\n' % answer)
     
     #--------------------------------------------------------------------------------------------#
-    # t4 -- select count(*) from user join like on user.id = like.id1 where user.name = "{target_user}"
+    # t4 -- select count(*) from user join like on id = id1 where name = "{target_user}"
     #--------------------------------------------------------------------------------------------#  
     test_file_path = os.path.join(testcase_dir, 't4.txt')
     answer_file_path = os.path.join(answer_dir, 't4.txt')
@@ -168,7 +168,7 @@ def main():
     target_user = name_list.sample(n=1).iloc[0, 0]
     target_user = "{}{}".format(target_user, random.randint(0,2))
     with open(test_file_path, 'a') as f:
-        f.write("select count(*) from user join like on user.id = like.id1 where user.name = \"{}\"\n".format(target_user))
+        f.write("select count(*) from user join like on id = id1 where name = \"{}\"\n".format(target_user))
         f.write(".exit\n")
     index = user_table.loc[(user_table['name']=='"{}"'.format(target_user))]
     if len(index)==0:
@@ -181,7 +181,7 @@ def main():
         f.write('(%d)\n' % answer)
     
     #--------------------------------------------------------------------------------------------#
-    # t5 -- select count(*) from user join like on user.id = like.id2 where age < {target_age}
+    # t5 -- select count(*) from user join like on id = id2 where age < {target_age}
     #--------------------------------------------------------------------------------------------#
     test_file_path = os.path.join(testcase_dir, 't5.txt')
     answer_file_path = os.path.join(answer_dir, 't5.txt')
@@ -189,7 +189,7 @@ def main():
 
     target_age = random.randint(18, 90)
     with open(test_file_path, 'a') as f:
-        f.write("select count(*) from user join like on user.id = like.id2 where age < {}\n".format(target_age))
+        f.write("select count(*) from user join like on id = id2 where age < {}\n".format(target_age))
         f.write(".exit\n")
     answer = pd.merge(user_table, like_table, how='inner', left_on=['id'],right_on=['id2'])
     answer = answer[answer['age']<target_age].loc[:,'name'].count()
