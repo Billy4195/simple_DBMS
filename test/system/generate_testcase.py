@@ -156,7 +156,7 @@ def main():
     answer = user_table.loc[(user_table['age']>=lower)&(user_table['age']<=upper),'age'].count()
 
     with open(answer_file_path, 'w') as f:
-        f.write('(%d)' % answer)
+        f.write('(%d)\n' % answer)
     
     #--------------------------------------------------------------------------------------------#
     # t4 -- select count(*) from user join like on user.id = like.id1 where user.name = "{target_user}"
@@ -178,7 +178,7 @@ def main():
         answer = answer.shape[0]
 
     with open(answer_file_path, 'w') as f:
-        f.write('(%d)' % answer)
+        f.write('(%d)\n' % answer)
     
     #--------------------------------------------------------------------------------------------#
     # t5 -- select count(*) from user join like on user.id = like.id2 where age < {target_age}
@@ -195,7 +195,7 @@ def main():
     answer = answer[answer['age']<target_age].loc[:,'name'].count()
 
     with open(answer_file_path, 'w') as f:
-        f.write('(%d)' % answer)
+        f.write('(%d)\n' % answer)
 
 if __name__ == "__main__":
     main()
