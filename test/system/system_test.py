@@ -73,6 +73,7 @@ def main():
     parser.add_argument("shell", help="The path of the compiled shell")
     parser.add_argument("test_case", help="The test case to be run, default: all", nargs="*", default="all")
     parser.add_argument("--exclude", help="The excluded test cases don't need to run", nargs="*", default=[])
+    parser.add_argument("-t", "--timing", help="Number of times for timing test cases", type=int, default=0)
     args = parser.parse_args()
 
     if not isinstance(args.test_case, list):
@@ -82,6 +83,7 @@ def main():
     testcase_path = os.path.join(file_path, "testcases")
     output_path = os.path.join(file_path, "output")
     answer_path = os.path.join(file_path, "answer")
+    n_timing = args.timing
 
     if args.test_case == "all":
         args.test_case = os.listdir(testcase_path)
