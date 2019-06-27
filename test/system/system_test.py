@@ -72,6 +72,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("shell", help="The path of the compiled shell")
     parser.add_argument("test_case", help="The test case to be run, default: all", nargs="*", default="all")
+    parser.add_argument("--exclude", help="The excluded test cases don't need to run", nargs="*", default=[])
     args = parser.parse_args()
 
     if not isinstance(args.test_case, list):
@@ -85,6 +86,9 @@ def main():
     if args.test_case == "all":
         args.test_case = os.listdir(testcase_path)
     
+    for e_test_case in args.exclude:
+        args.test_case.remove(e_test_case)
+
     result = dict()
     for test_suite in args.test_case:
         if test_suite == "__pycache__":
