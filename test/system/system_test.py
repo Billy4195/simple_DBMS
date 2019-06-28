@@ -7,6 +7,7 @@ import argparse
 import json
 import pexpect
 import time
+import signal
 
 def setup_output_dir(output_dir):
     if not os.path.exists(output_dir):
@@ -20,6 +21,9 @@ def execute_query(process, prompt, query, searchwindowsize=50):
     time_end = time.perf_counter()
     return time_end - time_start
 
+def timeout_handler(signum, frame):
+    raise TimeoutError
+
 def execute_testcase(exe, case_path, out_path, timing=False):
     with open(case_path) as fp:
         content = fp.readlines()
@@ -29,25 +33,34 @@ def execute_testcase(exe, case_path, out_path, timing=False):
         select_content = filter(lambda l: l.startswith('select'), content)
         # Setup child process
         prompt = 'db > '
-        out_file = open(out_path, 'w')
-        p = pexpect.spawnu(exe, timeout=None, echo=False)
-        p.delaybeforesend = None
-        p.logfile_read = out_file
-        p.expect(prompt)
-        # Measure insert time
-        insert_time = execute_query(p, prompt, insert_content)
-        # Measure select time
-        select_time = execute_query(p, prompt, select_content)
-        # Exit program
-        p.sendline('.exit')
-        p.wait()
-        out_file.close()
+        with open(out_path, 'w') as fp:
+            try:
+                p = pexpect.spawnu(exe, timeout=None, echo=False)
+                p.delaybeforesend = None
+                p.logfile_read = fp
+                p.expect(prompt)
+                insert_time = 0
+                select_time = 0
+                signal.alarm(2)
+                # Measure insert time
+                insert_time = execute_query(p, prompt, insert_content)
+                # Measure select time
+                select_time = execute_query(p, prompt, select_content)
+                # Exit program
+                p.sendline('.exit')
+                p.wait()
+                signal.alarm(0)
+            except TimeoutError:
+                p.close()
+                print('Timeout')
+                insert_time = -1 if insert_time == 0 else insert_time
+                select_time = -1 if select_time == 0 else select_time
         # Remove unnecessary output
-        with open(out_path) as f:
-            output = f.read()
+        with open(out_path) as fp:
+            output = fp.read()
         output = output.replace(prompt, '').replace('\r\n', '\n')
-        with open(out_path, 'w') as f:
-            f.write(output)
+        with open(out_path, 'w') as fp:
+            fp.write(output)
         return insert_time, select_time
     else:
         content.insert(0, ".output {out_path}\n".format(out_path=out_path))
@@ -88,6 +101,7 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path, n_timing)
         if n_timing == 0:
             execute_testcase(exe, case_path, out_path, timing=False)
         else:
+            signal.signal(signal.SIGALRM, timeout_handler)
             exe_time = [execute_testcase(exe, case_path, out_path, timing=True) for _ in range(n_timing)]
 
         if suite:
