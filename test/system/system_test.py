@@ -9,6 +9,8 @@ import pexpect
 import time
 import signal
 
+_timeout_second = 60 * 5
+
 def setup_output_dir(output_dir):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
@@ -41,7 +43,7 @@ def execute_testcase(exe, case_path, out_path, timing=False):
                 p.expect(prompt)
                 insert_time = 0
                 select_time = 0
-                signal.alarm(2)
+                signal.alarm(_timeout_second)
                 # Measure insert time
                 insert_time = execute_query(p, prompt, insert_content)
                 # Measure select time
