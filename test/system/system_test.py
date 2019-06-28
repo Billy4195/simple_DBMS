@@ -9,7 +9,7 @@ import pexpect
 import time
 import signal
 
-_timeout_second = 2
+_timeout_second = 60 * 5
 
 def setup_output_dir(output_dir):
     if not os.path.exists(output_dir):
@@ -35,14 +35,14 @@ def execute_testcase(exe, case_path, out_path, timing=False):
         select_content = filter(lambda l: l.startswith('select'), content)
         # Setup child process
         prompt = 'db > '
+        insert_time = 0
+        select_time = 0
         with open(out_path, 'w') as fp:
             try:
                 p = pexpect.spawnu(exe, timeout=None, echo=False)
                 p.delaybeforesend = None
                 p.logfile_read = fp
                 p.expect(prompt)
-                insert_time = 0
-                select_time = 0
                 signal.alarm(_timeout_second)
                 # Measure insert time
                 insert_time = execute_query(p, prompt, insert_content)
