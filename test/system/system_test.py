@@ -10,7 +10,23 @@ def setup_output_dir(output_dir):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
-def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path):
+def execute_testcase(exe, case_path, out_path, timing=False):
+    with open(case_path) as fp:
+        content = fp.readlines()
+    if timing:
+        pass
+    else:
+        content.insert(0, ".output {out_path}\n".format(out_path=out_path))
+        p = subprocess.Popen([exe], stdin=subprocess.PIPE)
+        for line in content:
+            p.stdin.write(line.encode())
+        p.stdin.close()
+        try:
+            p.wait(timeout=30)
+        except subprocess.TimeoutExpired:
+            print("Timeout")
+
+def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path, n_timing):
     correct_count = 0
     suite_name = os.path.basename(suite_path)
     suite_mod_path = os.path.join(suite_path, "suite.py")
@@ -34,18 +50,9 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path):
         case_path = os.path.join(suite_path, case)
         out_path = os.path.join(suite_out_path, case)
         ans_path = os.path.join(suite_ans_path, case)
-        with open(case_path) as fp:
-            content = fp.readlines()
-        content.insert(0, ".output {out_path}\n".format(out_path=out_path))
-        p = subprocess.Popen([exe], stdin=subprocess.PIPE) 
-        for line in content:
-            p.stdin.write(line.encode())
 
-        p.stdin.close()
-        try:
-            p.wait(timeout=30)
-        except subprocess.TimeoutExpired:
-            print("Timeout")
+        if n_timing == 0:
+            execute_testcase(exe, case_path, out_path, timing=False)
 
         if suite:
             suite.tearDown()
@@ -103,7 +110,7 @@ def main():
         if os.path.isdir(suite_path):
             result[test_suite] = dict()
             setup_output_dir(suite_out_path)
-            ret = execute_testsuite(sys.argv[1], suite_path, suite_out_path, suite_ans_path)
+            ret = execute_testsuite(sys.argv[1], suite_path, suite_out_path, suite_ans_path, n_timing)
             correct_count, total_count, failed_cases = ret
             result[test_suite]["correct"] = correct_count
             result[test_suite]["total"] = total_count
