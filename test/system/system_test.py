@@ -5,16 +5,39 @@ import subprocess
 import filecmp
 import argparse
 import json
+import pexpect
 
 def setup_output_dir(output_dir):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
+def execute_query(process, prompt, query, searchwindowsize=50):
+    for line in query:
+        process.send(line)
+        process.expect(prompt, searchwindowsize=searchwindowsize)
+
 def execute_testcase(exe, case_path, out_path, timing=False):
     with open(case_path) as fp:
         content = fp.readlines()
     if timing:
-        pass
+        # Assume select query appear after all insert query
+        insert_content = filter(lambda l: l.startswith('insert'), content)
+        select_content = filter(lambda l: l.startswith('select'), content)
+        # Setup child process
+        prompt = 'db > '
+        out_file = open(out_path, 'w')
+        p = pexpect.spawnu(exe, timeout=None, echo=False)
+        p.delaybeforesend = None
+        p.logfile_read = out_file
+        p.expect(prompt)
+        # Measure insert time
+        execute_query(p, prompt, insert_content)
+        # Measure select time
+        execute_query(p, prompt, select_content)
+        # Exit program
+        p.sendline('.exit')
+        p.wait()
+        out_file.close()
     else:
         content.insert(0, ".output {out_path}\n".format(out_path=out_path))
         p = subprocess.Popen([exe], stdin=subprocess.PIPE)
@@ -53,6 +76,8 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path, n_timing)
 
         if n_timing == 0:
             execute_testcase(exe, case_path, out_path, timing=False)
+        else:
+            execute_testcase(exe, case_path, out_path, timing=True)
 
         if suite:
             suite.tearDown()
