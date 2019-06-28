@@ -42,6 +42,12 @@ def execute_testcase(exe, case_path, out_path, timing=False):
         p.sendline('.exit')
         p.wait()
         out_file.close()
+        # Remove unnecessary output
+        with open(out_path) as f:
+            output = f.read()
+        output = output.replace(prompt, '').replace('\r\n', '\n')
+        with open(out_path, 'w') as f:
+            f.write(output)
     else:
         content.insert(0, ".output {out_path}\n".format(out_path=out_path))
         p = subprocess.Popen([exe], stdin=subprocess.PIPE)
