@@ -6,15 +6,19 @@ import filecmp
 import argparse
 import json
 import pexpect
+import time
 
 def setup_output_dir(output_dir):
     if not os.path.exists(output_dir):
         os.mkdir(output_dir)
 
 def execute_query(process, prompt, query, searchwindowsize=50):
+    time_start = time.perf_counter()
     for line in query:
         process.send(line)
         process.expect(prompt, searchwindowsize=searchwindowsize)
+    time_end = time.perf_counter()
+    return time_end - time_start
 
 def execute_testcase(exe, case_path, out_path, timing=False):
     with open(case_path) as fp:
@@ -31,9 +35,9 @@ def execute_testcase(exe, case_path, out_path, timing=False):
         p.logfile_read = out_file
         p.expect(prompt)
         # Measure insert time
-        execute_query(p, prompt, insert_content)
+        insert_time = execute_query(p, prompt, insert_content)
         # Measure select time
-        execute_query(p, prompt, select_content)
+        select_time = execute_query(p, prompt, select_content)
         # Exit program
         p.sendline('.exit')
         p.wait()
