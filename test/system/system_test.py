@@ -48,6 +48,7 @@ def execute_testcase(exe, case_path, out_path, timing=False):
         output = output.replace(prompt, '').replace('\r\n', '\n')
         with open(out_path, 'w') as f:
             f.write(output)
+        return insert_time, select_time
     else:
         content.insert(0, ".output {out_path}\n".format(out_path=out_path))
         p = subprocess.Popen([exe], stdin=subprocess.PIPE)
@@ -87,7 +88,7 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path, n_timing)
         if n_timing == 0:
             execute_testcase(exe, case_path, out_path, timing=False)
         else:
-            execute_testcase(exe, case_path, out_path, timing=True)
+            exe_time = [execute_testcase(exe, case_path, out_path, timing=True) for _ in range(n_timing)]
 
         if suite:
             suite.tearDown()
@@ -108,7 +109,11 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path, n_timing)
             correct_count, len(case_files)))
     print("Failed cases: {}".format(failed_cases))
     print()
-    return correct_count, len(case_files), failed_cases
+    if n_timing == 0:
+        exe_result = correct_count, len(case_files), failed_cases
+    else:
+        exe_result = correct_count, len(case_files), failed_cases, exe_time
+    return exe_result
 
 def main():
     parser = argparse.ArgumentParser()
@@ -146,6 +151,9 @@ def main():
             result[test_suite] = dict()
             setup_output_dir(suite_out_path)
             ret = execute_testsuite(sys.argv[1], suite_path, suite_out_path, suite_ans_path, n_timing)
+            if n_timing != 0:
+                ret, exe_time = ret[0:3], ret[3]
+                result[test_suite]["timing"] = exe_time
             correct_count, total_count, failed_cases = ret
             result[test_suite]["correct"] = correct_count
             result[test_suite]["total"] = total_count
