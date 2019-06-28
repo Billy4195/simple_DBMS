@@ -9,7 +9,7 @@ import pexpect
 import time
 import signal
 
-_timeout_second = 60 * 5
+_timeout_second = 2
 
 def setup_output_dir(output_dir):
     if not os.path.exists(output_dir):
@@ -92,6 +92,7 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path, n_timing)
 
     print("Starting test suite ``{suite}``".format(suite=suite_name))
     failed_cases = list()
+    exe_time = []
     for case in sorted(case_files):
         if suite:
             suite.setUp()
@@ -104,7 +105,7 @@ def execute_testsuite(exe, suite_path, suite_out_path, suite_ans_path, n_timing)
             execute_testcase(exe, case_path, out_path, timing=False)
         else:
             signal.signal(signal.SIGALRM, timeout_handler)
-            exe_time = [execute_testcase(exe, case_path, out_path, timing=True) for _ in range(n_timing)]
+            exe_time.append([execute_testcase(exe, case_path, out_path, timing=True) for _ in range(n_timing)])
 
         if suite:
             suite.tearDown()
