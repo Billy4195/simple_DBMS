@@ -42,8 +42,8 @@ def execute_testcase(exe, case_path, out_path, timing=False):
                 p = pexpect.spawnu(exe, timeout=None, echo=False)
                 p.delaybeforesend = None
                 p.logfile_read = fp
-                p.expect(prompt)
                 signal.alarm(_timeout_second)
+                p.expect(prompt)
                 # Measure insert time
                 insert_time = execute_query(p, prompt, insert_content)
                 # Measure select time
